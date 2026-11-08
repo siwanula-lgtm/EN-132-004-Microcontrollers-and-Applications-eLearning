@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 08 - การดีบักและการบำรุงรักษา</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 8 — การดีบักและการบำรุงรักษา</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · Debugging and Maintenance</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 13–14 · ท 4 / ป 4 ชม. · CLO2, CLO3<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>การดีบักอย่างเป็นระบบเริ่มจากการสังเกตอาการ ตั้งสมมติฐาน ทดสอบทีละจุด และบันทึกผล เครื่องมือหลักคือ print, REPL, assert และ try/except การบังคับเอาต์พุตผ่าน REPL ช่วยทดสอบฮาร์ดแวร์ทีละอุปกรณ์อย่างปลอดภัย การบำรุงรักษาเชิงป้องกัน การสำรองโปรแกรมด้วย mpremote และการอัปเดตเฟิร์มแวร์ด้วย esptool ทำให้ระบบกลับมาทำงานได้เร็วและลดความเสียหาย</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>8.1 ใช้เทคนิคดีบักโปรแกรมไมโครคอนโทรลเลอร์ได้อย่างเป็นระบบ</li><li>8.2 บังคับเอาต์พุตและติดตามค่าผ่าน REPL ได้</li><li>8.3 วิเคราะห์และแก้ปัญหาเซนเซอร์และแอคชูเอเตอร์ได้</li><li>8.4 วางแผนบำรุงรักษา สำรองและกู้คืนโปรแกรม และอัปเดตเฟิร์มแวร์ได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>8.1 เทคนิคการดีบักโปรแกรมไมโครคอนโทรลเลอร์</li><li>8.2 การบังคับเอาต์พุตและติดตามค่าผ่าน REPL/Serial</li><li>8.3 การแก้ปัญหาเซนเซอร์และแอคชูเอเตอร์</li><li>8.4 การบำรุงรักษาเชิงป้องกัน และ 8.5 การบำรุงรักษา</li><li>8.6 การสำรองและกู้คืนโปรแกรม</li><li>8.7 การอัปเดตเฟิร์มแวร์และบูตโหลดเดอร์</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>การดีบักอย่างเป็นระบบเริ่มจากการสังเกตอาการ ตั้งสมมติฐาน ทดสอบทีละจุด และบันทึกผล เครื่องมือหลักคือ print, REPL, assert และ try/except การบังคับเอาต์พุตผ่าน REPL ช่วยทดสอบฮาร์ดแวร์ทีละอุปกรณ์อย่างปลอดภัย การบำรุงรักษาเชิงป้องกัน การสำรองโปรแกรมด้วย mpremote และการอัปเดตเฟิร์มแวร์ด้วย esptool ทำให้ระบบกลับมาทำงานได้เร็วและลดความเสียหาย</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>จงเรียงขั้นตอนการดีบักอย่างเป็นระบบ</li><li>OSError: [Errno 19] จาก I2C ควรตรวจอะไร</li><li>จงเขียนคำสั่ง REPL บังคับ LED ที่ GPIO2 ให้ติดแล้วดับ</li><li>เหตุใดต้องบังคับเอาต์พุตทีละช่อง</li><li>เซอร์โวสั่นเมื่อโหลดสูง ควรแก้อย่างไร</li><li>จงจัดทำตารางบำรุงรักษาเชิงป้องกันสำหรับบอร์ดทดลอง 4 รายการ</li></ul>
+        </div>
+      </div>
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อควรระวังด้านความปลอดภัย (ใบงานปฏิบัติ)</div>
+        <div class="section-body">
+          <ul class="mini"><li>2. ความปลอดภัยในการบังคับเอาต์พุตและการอัปเดตเฟิร์มแวร์</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 8</div>
+        <div class="section-body">
+          <p><span class="accent">สคริปต์ตรวจสอบตัวเอง (Self-diagnostic) บันทึกล็อก บังคับเอาต์พุตจาก REPL และสำรอง/กู้คืนโปรแกรมด้วย mpremote พร้อม Dashboard</span><br>เวลาปฏิบัติ 4 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 8 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

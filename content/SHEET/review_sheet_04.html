@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 04 - การเขียนโปรแกรมควบคุมแบบต่อเนื่อง</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 4 — การเขียนโปรแกรมควบคุมแบบต่อเนื่อง</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · Continuous Control Programming</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 5–6 · ท 4 / ป 4 ชม. · CLO3<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>การควบคุมแบบต่อเนื่องคือการอ่านค่าตัวแปรกระบวนการซ้ำ ๆ เปรียบเทียบกับค่าที่ตั้งไว้ แล้วปรับเอาต์พุตตามผลต่าง เช่น ควบคุมอุณหภูมิแบบ ON/OFF ที่มีช่วงฮิสเทอรีซิสหรือแบบสัดส่วน (P) มอเตอร์ AC ควบคุมความเร็วผ่านอินเวอร์เตอร์โดยเปลี่ยนความถี่ ส่วนสเตปปิ้งมอเตอร์เคลื่อนที่เป็นก้าวตามลำดับสัญญาณคอยล์ จึงกำหนดตำแหน่งได้โดยนับก้าว ADC แปลงแรงดันอนาล็อกเป็นเลขดิจิทัล ความละเอียด 12 บิตของ ESP32 ให้ค่า 0–4095 และควรกรองสัญญาณรบกวนก่อนนำไปควบคุม</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>4.1 เข้าใจหลักการของมอเตอร์ AC และสเตปปิ้งมอเตอร์</li><li>4.2 เขียนโปรแกรมควบคุมแบบ Loop ทั้ง ON/OFF แบบฮิสเทอรีซิสและแบบสัดส่วนได้</li><li>4.3 อธิบายหลักการ ADC และอ่านเซนเซอร์อนาล็อกได้</li><li>4.4 กรองสัญญาณและแปลงค่าเป็นหน่วยทางวิศวกรรมได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>4.1 หลักการทำงานของมอเตอร์ AC และสเตปปิ้งมอเตอร์</li><li>4.2 โปรแกรมวงจรการควบคุมแบบ Loop</li><li>4.3 การออกแบบโปรแกรมควบคุมกระบวนการต่อเนื่อง</li><li>4.4 หลักการแปลงสัญญาณ Analog-to-Digital (ADC)</li><li>4.5 การอ่านค่าเซนเซอร์แบบอนาล็อกด้วยไมโครคอนโทรลเลอร์</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>การควบคุมแบบต่อเนื่องคือการอ่านค่าตัวแปรกระบวนการซ้ำ ๆ เปรียบเทียบกับค่าที่ตั้งไว้ แล้วปรับเอาต์พุตตามผลต่าง เช่น ควบคุมอุณหภูมิแบบ ON/OFF ที่มีช่วงฮิสเทอรีซิสหรือแบบสัดส่วน (P) มอเตอร์ AC ควบคุมความเร็วผ่านอินเวอร์เตอร์โดยเปลี่ยนความถี่ ส่วนสเตปปิ้งมอเตอร์เคลื่อนที่เป็นก้าวตามลำดับสัญญาณคอยล์ จึงกำหนดตำแหน่งได้โดยนับก้าว ADC แปลงแรงดันอนาล็อกเป็นเลขดิจิทัล ความละเอียด 12 บิตของ ESP32 ให้ค่า 0–4095 และควรกรองสัญญาณรบกวนก่อนนำไปควบคุม</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>มอเตอร์ 3 เฟส 4 ขั้ว 50 Hz มี Ns เท่าใด และถ้าสลิป 3 % ความเร็วจริงเท่าใด</li><li>ต้องการให้มอเตอร์ 4 ขั้วหมุน Ns = 900 rpm ต้องตั้งความถี่เท่าใด</li><li>สเตปปิ้งมอเตอร์ 1.8° ต้องการหมุน 90° ต้องส่งกี่ก้าว Full-step และกี่ก้าว Half-step</li><li>จงเขียนลำดับ Full-step 4 สถานะของ IN1–IN4 แบบ 2 คอยล์พร้อมกัน</li><li>ระบบเปิดพัดลมเมื่อ T&gt;32 °C ปิดเมื่อ T&lt;28 °C ถ้าตอนนี้ T = 30 °C และพัดลมเปิดอยู่ พัดลมจะเปิดหรือปิด …</li><li>ต้องการ P control: u = Kp(SP−PV) ถ้า SP = 30, PV = 26, Kp = 50 จะได้ u เท่าใด</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 4</div>
+        <div class="section-body">
+          <p><span class="accent">ควบคุมอุณหภูมิต่อเนื่อง: อ่านเทอร์มิสเตอร์ด้วย ADC กรองสัญญาณ ควบคุมพัดลมแบบฮิสเทอรีซิส และปรับมุมแดมเปอร์ด้วยสเตปปิ้งมอเตอร์ แสดงผลบน VS Code Dashboard</span><br>เวลาปฏิบัติ 4 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 4 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

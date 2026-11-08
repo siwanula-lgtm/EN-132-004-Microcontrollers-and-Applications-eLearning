@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 02 - การเขียนโปรแกรมสำหรับไมโครคอนโทรลเลอร์ด้วย MicroPython</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 2 — การเขียนโปรแกรมสำหรับไมโครคอนโทรลเลอร์ด้วย MicroPython</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · Programming Microcontrollers with MicroPython</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 2–3 · ท 4 / ป 4 ชม. · CLO2, CLO3<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>โปรแกรมไมโครคอนโทรลเลอร์ด้วย MicroPython ประกอบด้วยส่วนนำเข้าโมดูล การกำหนดค่าขา GPIO และ Timer การนิยามฟังก์ชัน และลูปหลักที่อ่านอินพุต ตัดสินใจ และสั่งเอาต์พุตซ้ำ ๆ การทำงานกับบิตด้วยตัวดำเนินการ &amp; | ^ ~ &gt; ทำให้ควบคุมกลุ่ม LED หรืออุปกรณ์หลายตัวได้อย่างมีประสิทธิภาพ ส่วน Timer และ Counter ช่วยกำหนดเวลาและนับเหตุการณ์ได้โดยไม่ต้องหยุดโปรแกรมรอ การจัดโปรแกรมเป็นฟังก์ชันและใช้โครงสร้าง if/elif/else ช่วยให้โปรแกรมอ่านง่าย แก้ไขง่าย และพร้อมต่อยอดเป็นระบบควบคุมจริง</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>2.1 เขียนโปรแกรม MicroPython เพื่ออ่าน/เขียนขา GPIO ได้</li><li>2.2 ใช้ Timer และตัวนับสร้างเวลาและนับเหตุการณ์ได้</li><li>2.3 จัดการบิตด้วย Set/Clear/Toggle และ Shift/Rotate ได้</li><li>2.4 เขียนฟังก์ชันและโครงสร้างเงื่อนไขเพื่อควบคุมอุปกรณ์ได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>2.1 ตัวแปร โครงสร้างโปรแกรม และการควบคุม GPIO</li><li>2.2 Timer และ Counter ของไมโครคอนโทรลเลอร์</li><li>2.3 การตั้ง ล้าง และสลับบิต (Set/Clear/Toggle)</li><li>2.4 ฟังก์ชันและโปรแกรมย่อย</li><li>2.5 การเปรียบเทียบและคำนวณทางคณิตศาสตร์</li><li>2.6 การเลื่อนและหมุนบิต (Shift/Rotate)</li><li>2.7 การประยุกต์ใช้โครงสร้างควบคุมตามเงื่อนไข</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>โปรแกรมไมโครคอนโทรลเลอร์ด้วย MicroPython ประกอบด้วยส่วนนำเข้าโมดูล การกำหนดค่าขา GPIO และ Timer การนิยามฟังก์ชัน และลูปหลักที่อ่านอินพุต ตัดสินใจ และสั่งเอาต์พุตซ้ำ ๆ การทำงานกับบิตด้วยตัวดำเนินการ &amp; | ^ ~ &gt; ทำให้ควบคุมกลุ่ม LED หรืออุปกรณ์หลายตัวได้อย่างมีประสิทธิภาพ ส่วน Timer และ Counter ช่วยกำหนดเวลาและนับเหตุการณ์ได้โดยไม่ต้องหยุดโปรแกรมรอ การจัดโปรแกรมเป็นฟังก์ชันและใช้โครงสร้าง if/elif/else ช่วยให้โปรแกรมอ่านง่าย แก้ไขง่าย และพร้อมต่อยอดเป็นระบบควบคุมจริง</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>จงเขียนคำสั่งกำหนด GPIO19 เป็นเอาต์พุตและ GPIO5 เป็นอินพุตแบบ Pull-up ใน MicroPython</li><li>ปุ่มต่อ GPIO4 ลง GND ใช้ Pull-up เมื่อกดอ่านได้ค่าใดและเมื่อไม่กดอ่านได้ค่าใด จงให้เหตุผล</li><li>จงอธิบายข้อดีของ ticks_ms เมื่อเทียบกับ sleep ในโปรแกรมที่ต้องอ่านปุ่มและกระพริบ LED พร้อมกัน</li><li>Timer(0).init(period=500, mode=Timer.PERIODIC, callback=f) เรียก f กี่ครั้งใน 10 วินาที และความถี่เท่าใด</li><li>กำหนด v = 0b00100100 จงหาผลของ v | 0x01, v &amp; ~0x04 &amp; 0xFF และ v ^ 0xFF</li><li>จงเขียนนิพจน์ทดสอบบิต 6 ของ v และบอกค่าที่ได้เมื่อ v = 0x40</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 2</div>
+        <div class="section-body">
+          <p><span class="accent">ไฟวิ่ง 8 บิตด้วยการ Shift/Rotate เลือกโหมดด้วยปุ่ม ปรับความเร็วด้วย Timer และแสดงผลบน VS Code Dashboard</span><br>เวลาปฏิบัติ 4 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 2 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

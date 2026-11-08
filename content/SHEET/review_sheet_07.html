@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 07 - เซนเซอร์และการประยุกต์ใช้งาน</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 7 — เซนเซอร์และการประยุกต์ใช้งาน</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · Sensors and Applications</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 11–12 · ท 4 / ป 4 ชม. · CLO2<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>เซนเซอร์และอุปกรณ์ในระบบฝังตัวสื่อสารด้วยโปรโตคอลที่ต่างกัน 1-Wire ใช้สายข้อมูลเดียวและรหัส ROM 64 บิต Modbus RTU เป็นโปรโตคอลมาสเตอร์/สเลฟที่นิยมในอุตสาหกรรมและตรวจข้อมูลด้วย CRC-16 จอ LCD/OLED แสดงค่าบนอุปกรณ์ ส่วน Keypad 4x4 ใช้การสแกนแถว-คอลัมน์ ก่อนเปิดระบบต้องตรวจการเดินสายและใช้เครื่องมือวัดเพื่อหาสาเหตุเมื่อสื่อสารไม่ได้</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>7.1 อธิบายโปรโตคอล 1-Wire และ Modbus RTU ได้</li><li>7.2 ใช้เครื่องมือตรวจสอบสัญญาณวัดและการสื่อสารได้</li><li>7.3 เขียนโปรแกรมแสดงผลบน OLED และอ่าน Keypad ได้</li><li>7.4 ตรวจสอบการเดินสายและอินพุต/เอาต์พุตก่อนใช้งานได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>7.1 โปรโตคอลที่ใช้กับเซนเซอร์</li><li>7.2 เครื่องมือตรวจสอบสัญญาณการวัดและการสื่อสาร</li><li>7.3 การแสดงผลด้วย LCD และ OLED</li><li>7.4 การอ่านปุ่มกดแบบเมทริกซ์ Keypad</li><li>7.5 การตรวจสอบการเดินสายและอินพุต/เอาต์พุต</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>เซนเซอร์และอุปกรณ์ในระบบฝังตัวสื่อสารด้วยโปรโตคอลที่ต่างกัน 1-Wire ใช้สายข้อมูลเดียวและรหัส ROM 64 บิต Modbus RTU เป็นโปรโตคอลมาสเตอร์/สเลฟที่นิยมในอุตสาหกรรมและตรวจข้อมูลด้วย CRC-16 จอ LCD/OLED แสดงค่าบนอุปกรณ์ ส่วน Keypad 4x4 ใช้การสแกนแถว-คอลัมน์ ก่อนเปิดระบบต้องตรวจการเดินสายและใช้เครื่องมือวัดเพื่อหาสาเหตุเมื่อสื่อสารไม่ได้</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>จงคำนวณอุณหภูมิจากค่าดิบ DS18B20 12 บิต 0x0140</li><li>DS18B20 ความละเอียด 11 บิต มีขั้นกี่องศาและใช้เวลาแปลงเท่าใด</li><li>เหตุใดสาย 1-Wire ต้องมีตัวต้านทานพูลอัพ</li><li>จงอธิบายแต่ละฟิลด์ของเฟรม 01 03 00 00 00 02 C4 0B</li><li>ที่ 19200 8N1 เฟรม Modbus 8 ไบต์ใช้เวลาเท่าใด</li><li>ควรเลือกเครื่องมือใดเมื่อ I2C สแกนไม่พบอุปกรณ์ และเพราะเหตุใด</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 7</div>
+        <div class="section-body">
+          <p><span class="accent">อ่านอุณหภูมิ DS18B20 (1-Wire) แสดงผลบน OLED และรับรหัส PIN จาก Keypad 4x4 พร้อมส่งข้อมูลขึ้น VS Code Dashboard</span><br>เวลาปฏิบัติ 4 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 7 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

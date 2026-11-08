@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 05 - โปรแกรมขัดจังหวะ (Interrupt) ในไมโครคอนโทรลเลอร์</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 5 — โปรแกรมขัดจังหวะ (Interrupt) ในไมโครคอนโทรลเลอร์</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · Interrupt Programming in Microcontrollers</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 7 · ท 2 / ป 2 ชม. · CLO2<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>Interrupt ทำให้ไมโครคอนโทรลเลอร์หยุดงานหลักชั่วคราวเพื่อตอบสนองเหตุการณ์ทันที เช่น ขอบสัญญาณของขาหรือการครบเวลาของ Timer แล้วกลับไปทำงานหลักต่อ ฟังก์ชันบริการ (ISR) ต้องสั้นมาก ใช้ตั้งแฟล็กหรือนับค่า แล้วให้ลูปหลักประมวลผลต่อ การตั้งค่าคาบ Timer สำหรับสุ่ม ADC และเวลาดีบาวน์ต้องปรับแต่งให้เหมาะกับสัญญาณ เพื่อไม่พลาดเหตุการณ์และไม่นับซ้ำ</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>5.1 อธิบายหลักการและข้อดีของ Interrupt เทียบกับการโพลลิ่งได้</li><li>5.2 เขียน ISR สำหรับขาและ Timer ด้วย MicroPython ได้</li><li>5.3 ตั้งค่าการสุ่ม ADC ด้วย Timer และปรับค่าดีบาวน์ได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>5.1 การตั้งค่าพารามิเตอร์ ADC และ Timer</li><li>5.2 ชนิดของ Interrupt และการจัดลำดับความสำคัญ</li><li>5.3 การทดสอบและปรับแต่งพารามิเตอร์ (Debounce/ช่วงเวลา Timer)</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>Interrupt ทำให้ไมโครคอนโทรลเลอร์หยุดงานหลักชั่วคราวเพื่อตอบสนองเหตุการณ์ทันที เช่น ขอบสัญญาณของขาหรือการครบเวลาของ Timer แล้วกลับไปทำงานหลักต่อ ฟังก์ชันบริการ (ISR) ต้องสั้นมาก ใช้ตั้งแฟล็กหรือนับค่า แล้วให้ลูปหลักประมวลผลต่อ การตั้งค่าคาบ Timer สำหรับสุ่ม ADC และเวลาดีบาวน์ต้องปรับแต่งให้เหมาะกับสัญญาณ เพื่อไม่พลาดเหตุการณ์และไม่นับซ้ำ</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>จงเปรียบเทียบ Polling กับ Interrupt อย่างน้อย 3 ประเด็น</li><li>จงเขียนโค้ด Interrupt ขอบขาลงที่ GPIO4 ให้ตั้งแฟล็ก pressed = True</li><li>เหตุใดไม่ควรเรียก print ใน ISR</li><li>Timer คาบ 20 ms มีอัตราสุ่มกี่ Hz และสุ่มสัญญาณสูงสุดกี่ Hz ได้โดยไม่เกิด Aliasing</li><li>จงอธิบาย Aliasing พร้อมยกตัวอย่าง</li><li>นับพัลส์ได้ 300 ครั้งใน 3 วินาที PPR = 10 จงหา rpm</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 5</div>
+        <div class="section-body">
+          <p><span class="accent">นับพัลส์ด้วย Interrupt พร้อมดีบาวน์ สุ่ม ADC ด้วย Timer และแสดงความเร็วรอบบน VS Code Dashboard</span><br>เวลาปฏิบัติ 2 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 5 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 06 - การสื่อสารแบบอนุกรม</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 6 — การสื่อสารแบบอนุกรม</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · Serial Communication</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 9–10 · ท 4 / ป 4 ชม. · CLO2<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>การสื่อสารแบบอนุกรมช่วยให้ไมโครคอนโทรลเลอร์แลกเปลี่ยนข้อมูลกับคอมพิวเตอร์ โมดูล และเซนเซอร์โดยใช้สายน้อย UART เป็นแบบอะซิงโครนัสที่ต้องตั้งค่าบอดเรตและรูปแบบเฟรมให้ตรงกัน ส่วน I2C ใช้สองสายและแอดเดรสเลือกอุปกรณ์ และ SPI ใช้สัญญาณนาฬิกากับขา CS ให้ความเร็วสูง หน้าจอ HMI ที่ดีแสดงสถานะ ค่ากระบวนการ การสั่งงานและสัญญาณเตือนอย่างชัดเจน การรวมการสื่อสารกับเซนเซอร์และแอคชูเอเตอร์ เช่น เซอร์โวและสายพาน ต้องออกแบบเครื่องสถานะและการจัดการข้อผิดพลาด</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>6.1 อธิบายหลักการและเขียนโปรแกรมสื่อสาร UART ได้</li><li>6.2 เปรียบเทียบและใช้งาน I2C และ SPI ได้</li><li>6.3 ออกแบบหน้าจอ HMI และโปรโตคอลคำสั่งอย่างง่ายได้</li><li>6.4 ประยุกต์การสื่อสารกับเซนเซอร์และเซอร์โวในระบบอัตโนมัติได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>6.1 หลักการสื่อสารแบบ UART/USART</li><li>6.2 การออกแบบหน้าจอ HMI สำหรับแสดงผลและควบคุม</li><li>6.3 การสื่อสาร SPI และ I2C</li><li>6.4 การเชื่อมต่อไมโครคอนโทรลเลอร์กับอุปกรณ์ภายนอก</li><li>6.5 การควบคุมแขนกลและสายพานลำเลียงด้วยไมโครคอนโทรลเลอร์</li><li>6.6 การประยุกต์ใช้ไมโครคอนโทรลเลอร์ควบคุมระบบเมคคาทรอนิกส์</li><li>6.7 การออกแบบโปรแกรมควบคุมระบบอัตโนมัติ</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>การสื่อสารแบบอนุกรมช่วยให้ไมโครคอนโทรลเลอร์แลกเปลี่ยนข้อมูลกับคอมพิวเตอร์ โมดูล และเซนเซอร์โดยใช้สายน้อย UART เป็นแบบอะซิงโครนัสที่ต้องตั้งค่าบอดเรตและรูปแบบเฟรมให้ตรงกัน ส่วน I2C ใช้สองสายและแอดเดรสเลือกอุปกรณ์ และ SPI ใช้สัญญาณนาฬิกากับขา CS ให้ความเร็วสูง หน้าจอ HMI ที่ดีแสดงสถานะ ค่ากระบวนการ การสั่งงานและสัญญาณเตือนอย่างชัดเจน การรวมการสื่อสารกับเซนเซอร์และแอคชูเอเตอร์ เช่น เซอร์โวและสายพาน ต้องออกแบบเครื่องสถานะและการจัดการข้อผิดพลาด</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>จงคำนวณเวลาที่ใช้ส่งข้อความ &quot;HELLOn&quot; (6 ไบต์) ที่ 9600 bit/s รูปแบบ 8N1</li><li>จงอธิบายความหมายของ UART 115200 8N1</li><li>จงวาดเฟรม UART ของอักขระ A (0x41) โดยเรียงบิตจากซ้ายไปขวา</li><li>จงเปรียบเทียบ I2C กับ SPI อย่างน้อย 3 ประเด็น</li><li>สแกน I2C พบ [0x3C, 0x44] จงคาดคะเนอุปกรณ์ที่ต่ออยู่</li><li>ค่าดิบความชื้น 0x8000 = 32768 จาก SHT30 คิดเป็น RH กี่เปอร์เซ็นต์</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 6</div>
+        <div class="section-body">
+          <p><span class="accent">HMI ผ่านพอร์ตอนุกรม: อ่าน SHT30 ด้วย I2C ควบคุมเซอร์โวและ LED ด้วยคำสั่ง ASCII และทดสอบ UART loopback แสดงผลบน VS Code Dashboard</span><br>เวลาปฏิบัติ 4 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 6 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

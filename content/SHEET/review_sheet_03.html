@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 03 - การควบคุมมอเตอร์ไฟฟ้ากระแสตรงด้วยไมโครคอนโทรลเลอร์</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 3 — การควบคุมมอเตอร์ไฟฟ้ากระแสตรงด้วยไมโครคอนโทรลเลอร์</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · DC Motor Control with Microcontrollers</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 4 · ท 2 / ป 2 ชม. · CLO3<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>การควบคุมแบบซีเควนซ์ทำให้ระบบเปลี่ยนจากขั้นตอนหนึ่งไปอีกขั้นตอนหนึ่งเมื่อเงื่อนไขเป็นจริง ออกแบบได้ด้วยแผนภาพสถานะและตารางขั้นตอน มอเตอร์ไฟฟ้ากระแสตรงต้องขับผ่านวงจรขับ (H-Bridge) ซึ่งกลับทิศทางได้ด้วยการสลับสวิตช์ และปรับความเร็วด้วยสัญญาณ PWM ที่เปลี่ยนแรงดันเฉลี่ยตามดิวตี้ไซเคิล การคำนวณกำลัง P = V·I และพลังงาน E = P·t ช่วยเลือกแหล่งจ่ายและตรวจสอบภาระของระบบ</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>3.1 ออกแบบโปรแกรมแบบซีเควนซ์ด้วยแผนภาพสถานะได้</li><li>3.2 อธิบายหลักการ H-Bridge และ PWM ได้</li><li>3.3 เขียนโปรแกรมควบคุมทิศทางและความเร็วมอเตอร์ DC ด้วย ESP32 ได้</li><li>3.4 คำนวณกำลังและพลังงานของมอเตอร์เบื้องต้นได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>3.1 หลักการออกแบบ Sequential Control</li><li>3.2 Step Sequence และ State Diagram</li><li>3.3 H-Bridge และการควบคุมความเร็วด้วย PWM</li><li>3.4 กำลังไฟฟ้าและพลังงานของมอเตอร์</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>การควบคุมแบบซีเควนซ์ทำให้ระบบเปลี่ยนจากขั้นตอนหนึ่งไปอีกขั้นตอนหนึ่งเมื่อเงื่อนไขเป็นจริง ออกแบบได้ด้วยแผนภาพสถานะและตารางขั้นตอน มอเตอร์ไฟฟ้ากระแสตรงต้องขับผ่านวงจรขับ (H-Bridge) ซึ่งกลับทิศทางได้ด้วยการสลับสวิตช์ และปรับความเร็วด้วยสัญญาณ PWM ที่เปลี่ยนแรงดันเฉลี่ยตามดิวตี้ไซเคิล การคำนวณกำลัง P = V·I และพลังงาน E = P·t ช่วยเลือกแหล่งจ่ายและตรวจสอบภาระของระบบ</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>จงเขียนตารางขั้นตอนของประตูอัตโนมัติ 3 สถานะ (ปิด, กำลังเปิด, เปิด) พร้อมเงื่อนไขการเปลี่ยนสถานะ</li><li>จงอธิบายความต่างระหว่างสถานะ Coast และ Brake ของ H-Bridge</li><li>เหตุใดห้ามเปิด Q1 และ Q2 พร้อมกัน</li><li>แหล่งจ่าย 12 V ดิวตี้ 35 % แรงดันเฉลี่ยเท่าใด</li><li>ต้องการแรงดันเฉลี่ย 7.5 V จากแหล่งจ่าย 12 V ต้องตั้งดิวตี้เท่าใด และ duty_u16 ประมาณเท่าใด</li><li>PWM 2 kHz มีคาบกี่ไมโครวินาที และที่ดิวตี้ 30 % สถานะสูงนานกี่ไมโครวินาที</li></ul>
+        </div>
+      </div>
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อควรระวังด้านความปลอดภัย (ใบงานปฏิบัติ)</div>
+        <div class="section-body">
+          <ul class="mini"><li>State Machine และ Soft start ต่อความปลอดภัยของวงจรขับ</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 3</div>
+        <div class="section-body">
+          <p><span class="accent">ควบคุมมอเตอร์ DC ด้วย H-Bridge: กลับทิศด้วย State Machine ปรับความเร็วด้วย PWM และ Soft start แสดงผลบน VS Code Dashboard</span><br>เวลาปฏิบัติ 2 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 3 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 01 - โครงสร้างและหลักการทำงานของไมโครโพรเซสเซอร์และไมโครคอนโทรลเลอร์</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🔌 Review Sheet หน่วยที่ 1 — โครงสร้างและหลักการทำงานของไมโครโพรเซสเซอร์และไมโครคอนโทรลเลอร์</div>
+      <div class="sub">EN-132-004 Microcontrollers and Applications · Structure and Principles of Microprocessors and Microcontrollers</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 1 · ท 2 / ป 2 ชม. · CLO1, CLO2<br>
+      ใบงานปฏิบัติ 1 ใบงาน
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. สาระสำคัญ</div>
+        <div class="section-body">
+          <p>ไมโครโพรเซสเซอร์ (Microprocessor) คือหน่วยประมวลผลกลางที่ต้องอาศัยหน่วยความจำและอุปกรณ์ I/O ภายนอกจึงจะทำงานเป็นระบบได้ ส่วนไมโครคอนโทรลเลอร์ (Microcontroller, MCU) รวม CPU หน่วยความจำโปรแกรม (Flash) หน่วยความจำข้อมูล (SRAM) และอุปกรณ์รอบข้าง (GPIO, ADC, Timer, UART ฯลฯ) ไว้ในชิปเดียว จึงเหมาะกับงานควบคุมแบบฝังตัว (Embedded Control) การทำความเข้าใจระบบเลขฐานสอง/ฐานสิบหก โครงสร้างบัส วัฏจักร Fetch–Decode–Execute และการกำหนดทิศทางพอร์ต I/O เป็นพื้นฐานของการเขียนโปรแกรมควบคุมอุปกรณ์ในทุกหน่วยถัดไป</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 2. จุดประสงค์การเรียน (ทั่วไป)</div>
+        <div class="section-body">
+          <ul class="mini"><li>1.1 เข้าใจระบบเลขฐาน 2, 8, 10, 16 และสามารถแปลงเลขฐานได้</li><li>1.2 อธิบายโครงสร้างและหลักการทำงานของไมโครโพรเซสเซอร์และไมโครคอนโทรลเลอร์ได้</li><li>1.3 เข้าใจชนิดของหน่วยความจำและหลักการจัดการพอร์ต I/O</li><li>1.4 สามารถต่อวงจรและเขียนโปรแกรม MicroPython เบื้องต้นบน ESP32 เพื่ออ่าน/เขียนขา GPIO และ ADC ได้</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. หัวข้อเนื้อหาในหน่วย</div>
+        <div class="section-body">
+          <ul class="mini"><li>1.1 ระบบควบคุมทางอิเล็กทรอนิกส์และระบบเลขฐาน</li><li>1.2 โครงสร้างและสถาปัตยกรรมของไมโครโพรเซสเซอร์/ไมโครคอนโทรลเลอร์</li><li>1.3 หน่วยความจำและการจัดการพอร์ต I/O</li><li>1.4 ตระกูลไมโครคอนโทรลเลอร์และการพัฒนาโปรแกรม</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📝</span> 4. บทสรุป</div>
+        <div class="section-body">
+          <p>ไมโครโพรเซสเซอร์ (Microprocessor) คือหน่วยประมวลผลกลางที่ต้องอาศัยหน่วยความจำและอุปกรณ์ I/O ภายนอกจึงจะทำงานเป็นระบบได้ ส่วนไมโครคอนโทรลเลอร์ (Microcontroller, MCU) รวม CPU หน่วยความจำโปรแกรม (Flash) หน่วยความจำข้อมูล (SRAM) และอุปกรณ์รอบข้าง (GPIO, ADC, Timer, UART ฯลฯ) ไว้ในชิปเดียว จึงเหมาะกับงานควบคุมแบบฝังตัว (Embedded Control) การทำความเข้าใจระบบเลขฐานสอง/ฐานสิบหก โครงสร้างบัส วัฏจักร Fetch–Decode–Execute และการกำหนดทิศทางพอร์ต I/O เป็นพื้นฐานของการเขียนโปรแกรมควบคุมอุปกรณ์ในทุกหน่วยถัดไป</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">❓</span> 5. คำถามทบทวน (จากแบบฝึกหัดท้ายหน่วย)</div>
+        <div class="section-body">
+          <ul class="mini"><li>จงแปลงเลขฐานสอง 1101 0110₂ เป็นเลขฐานสิบและฐานสิบหก</li><li>จงแปลงเลขฐานสิบ 200 เป็นเลขฐานสองและฐานสิบหก</li><li>จงแปลง 0x3A เป็นเลขฐานสองและฐานสิบ</li><li>ข้อมูล 8, 12 และ 16 บิต เก็บค่าจำนวนเต็มไม่มีเครื่องหมายได้ในช่วงใด</li><li>จงอธิบายหน้าที่ของ Address Bus, Data Bus และ Control Bus</li><li>จงเปรียบเทียบระบบไมโครโพรเซสเซอร์กับระบบไมโครคอนโทรลเลอร์อย่างน้อย 3 ประเด็น</li></ul>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🔧</span> 6. เชื่อมโยงกับใบงานปฏิบัติหน่วยเรียนที่ 1</div>
+        <div class="section-body">
+          <p><span class="accent">เลขฐานสองกับ GPIO: ตัวนับ 4 บิตด้วย LED และปุ่มกด พร้อมอ่านค่า ADC 12 บิตจาก LDR ผ่านบอร์ด ESP32 และแสดงผลบน VS Code Dashboard</span><br>เวลาปฏิบัติ 2 ชั่วโมง · ทำแบบทดสอบหลังเรียนหน่วยที่ 1 หลังทบทวน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-132-004 ไมโครคอนโทรลเลอร์และการประยุกต์ · อาจารย์ศิวณุ เหล่าบุตรสา · หลักสูตรวิศวกรรมศาสตรบัณฑิต สาขาวิชาวิศวกรรมเมคคาทรอนิกส์ มหาวิทยาลัยกาฬสินธุ์ · ภาคการศึกษาที่ 2</div>
+</div>
+</body>
+</html>

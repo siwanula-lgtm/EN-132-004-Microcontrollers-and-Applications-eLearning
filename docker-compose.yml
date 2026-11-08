@@ -1,0 +1,8 @@
+services:
+  microcontroller-elearning:
+    build: .
+    image: en-132-004-microcontroller-elearning:latest
+    container_name: en-132-004-microcontroller-elearning
+    ports:
+      - "8060:3000"
+    restart: unless-stopped
