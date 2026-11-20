@@ -51,63 +51,55 @@ GND) จ่าย 3V3 และ GND ให้เซนเซอร์
 คัดลอกโค้ดต่อไปนี้ลงในไฟล์ main.py แล้วอัปโหลดไปยังบอร์ด ESP32 ด้วย VS Code
 (MicroPico/Pymakr Extension)
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># main.py - ESP32 MicroPython: นับพัลส์ด้วย IRQ + Timer สุ่ม ADC + แสดง
-rpm</p>
-<p>from machine import Pin, Timer, ADC</p>
-<p>import time</p>
-<p>PPR = 20 # พัลส์ต่อรอบของแผ่นเอนโค้ดเดอร์ (ปรับตามอุปกรณ์จริง)</p>
-<p>DEB_US = 500 # เวลาดีบาวน์ของพัลส์ (µs) ปรับในการทดลอง</p>
-<p>pulse = Pin(15, Pin.IN, Pin.PULL_UP)</p>
-<p>btn = Pin(4, Pin.IN, Pin.PULL_UP)</p>
-<p>led = Pin(2, Pin.OUT)</p>
-<p>adc = ADC(Pin(34)); adc.atten(ADC.ATTN_11DB)</p>
-<p>cnt = 0; last_us = time.ticks_us</p>
-<p>def on_pulse(p): # ISR: นับพัลส์พร้อมดีบาวน์ (สั้นที่สุด)</p>
-<p>global cnt, last_us</p>
-<p>now = time.ticks_us</p>
-<p>if time.ticks_diff(now, last_us) &gt; DEB_US:</p>
-<p>cnt += 1</p>
-<p>last_us = now</p>
-<p>pulse.irq(trigger=Pin.IRQ_FALLING, handler=on_pulse)</p>
-<p>ev = False; last_ev = time.ticks_ms</p>
-<p>def on_btn(p): # ISR ปุ่มเหตุการณ์: ตั้งแฟล็กเท่านั้น</p>
-<p>global ev</p>
-<p>ev = True</p>
-<p>btn.irq(trigger=Pin.IRQ_FALLING, handler=on_btn)</p>
-<p>tick = False</p>
-<p>def on_tick(t): # Timer 100 ms ตั้งแฟล็กสุ่ม ADC</p>
-<p>global tick</p>
-<p>tick = True</p>
-<p>Timer(0).init(period=100, mode=Timer.PERIODIC, callback=on_tick)</p>
-<p>n_tick, total = 0, 0</p>
-<p>while True:</p>
-<p>if ev:</p>
-<p>ev = False</p>
-<p>if time.ticks_diff(time.ticks_ms, last_ev) &gt; 200:</p>
-<p>led.value(not led.value); last_ev = time.ticks_ms</p>
-<p>if tick:</p>
-<p>tick = False</p>
-<p>raw = adc.read; n_tick += 1</p>
-<p>print("&gt;ADC:{}".format(raw))</p>
-<p>if n_tick &gt;= 10: # ครบ 1 วินาที</p>
-<p>c = cnt; cnt = 0; n_tick = 0; total += c</p>
-<p>rpm = c / PPR * 60</p>
-<p>print("&gt;PULSES_S:{}".format(c));
-print("&gt;RPM:{:.1f}".format(rpm));
-print("&gt;TOTAL:{}".format(total))</p>
-<p>print("pulses/s={} rpm={:.1f} total={} led={}".format(c, rpm, total,
-led.value))</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```python
+# main.py - ESP32 MicroPython: นับพัลส์ด้วย IRQ + Timer สุ่ม ADC + แสดง rpm
+from machine import Pin, Timer, ADC
+import time
+
+PPR = 20                  # พัลส์ต่อรอบของแผ่นเอนโค้ดเดอร์ (ปรับตามอุปกรณ์จริง)
+DEB_US = 500              # เวลาดีบาวน์ของพัลส์ (µs) ปรับในการทดลอง
+pulse = Pin(15, Pin.IN, Pin.PULL_UP)
+btn = Pin(4, Pin.IN, Pin.PULL_UP)
+led = Pin(2, Pin.OUT)
+adc = ADC(Pin(34)); adc.atten(ADC.ATTN_11DB)
+
+cnt = 0; last_us = time.ticks_us()
+def on_pulse(p):                         # ISR: นับพัลส์พร้อมดีบาวน์ (สั้นที่สุด)
+    global cnt, last_us
+    now = time.ticks_us()
+    if time.ticks_diff(now, last_us) > DEB_US:
+        cnt += 1
+        last_us = now
+pulse.irq(trigger=Pin.IRQ_FALLING, handler=on_pulse)
+
+ev = False; last_ev = time.ticks_ms()
+def on_btn(p):                           # ISR ปุ่มเหตุการณ์: ตั้งแฟล็กเท่านั้น
+    global ev
+    ev = True
+btn.irq(trigger=Pin.IRQ_FALLING, handler=on_btn)
+
+tick = False
+def on_tick(t):                          # Timer 100 ms ตั้งแฟล็กสุ่ม ADC
+    global tick
+    tick = True
+Timer(0).init(period=100, mode=Timer.PERIODIC, callback=on_tick)
+
+n_tick, total = 0, 0
+while True:
+    if ev:
+        ev = False
+        if time.ticks_diff(time.ticks_ms(), last_ev) > 200:
+            led.value(not led.value()); last_ev = time.ticks_ms()
+    if tick:
+        tick = False
+        raw = adc.read(); n_tick += 1
+        print(">ADC:{}".format(raw))
+        if n_tick >= 10:                 # ครบ 1 วินาที
+            c = cnt; cnt = 0; n_tick = 0; total += c
+            rpm = c / PPR * 60
+            print(">PULSES_S:{}".format(c)); print(">RPM:{:.1f}".format(rpm)); print(">TOTAL:{}".format(total))
+            print("pulses/s={} rpm={:.1f} total={} led={}".format(c, rpm, total, led.value()))
+```
 
 ### 5. ขั้นตอนการตั้งค่า Dashboard บน VS Code
 

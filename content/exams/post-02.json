@@ -175,7 +175,7 @@
     },
     {
       "id": 7,
-      "question": "time.ticks_diff(time.ticks_ms, t0) > 200 ใช้ตรวจสอบสิ่งใด",
+      "question": "time.ticks_diff(time.ticks_ms(), t0) > 200 ใช้ตรวจสอบสิ่งใด",
       "choices": [
         {
           "key": "ก",

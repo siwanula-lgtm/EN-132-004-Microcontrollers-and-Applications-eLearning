@@ -192,7 +192,7 @@ f = 3000/60×20 = 1000 Hz → คาบ 1 ms ; ดีบาวน์ต้อง
 
 <details><summary>เฉลย</summary>
 
-now = time.ticks_us ; if time.ticks_diff(now, last) > 500: cnt += 1 ; last = now
+now = time.ticks_us() ; if time.ticks_diff(now, last) > 500: cnt += 1 ; last = now
 
 </details>
 

@@ -58,59 +58,51 @@ Potentiometer และปุ่มกด
 คัดลอกโค้ดต่อไปนี้ลงในไฟล์ main.py แล้วอัปโหลดไปยังบอร์ด ESP32 ด้วย VS Code
 (MicroPico/Pymakr Extension)
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># main.py - ESP32 MicroPython: ควบคุมมอเตอร์ DC ด้วย H-Bridge + PWM
-+ State Machine</p>
-<p>from machine import Pin, PWM, ADC</p>
-<p>import time</p>
-<p>in1 = Pin(26, Pin.OUT); in2 = Pin(27, Pin.OUT)</p>
-<p>ena = PWM(Pin(25), freq=1000); ena.duty_u16(0) # PWM 1 kHz</p>
-<p>pot = ADC(Pin(34)); pot.atten(ADC.ATTN_11DB) # ค่า 0-4095</p>
-<p>btn = Pin(4, Pin.IN, Pin.PULL_UP)</p>
-<p>VS = 9.0 # แรงดันแหล่งจ่ายมอเตอร์ (V) วัดจริงแล้วแก้ค่า</p>
-<p>I_NOM = 0.30 # กระแสโดยประมาณ (A) วัดด้วยมัลติมิเตอร์แล้วแก้ค่า</p>
-<p>RAMP = 1500 # ก้าวเพิ่มดิวตี้ต่อ 20 ms (Soft start)</p>
-<p>NAMES = ('STOP', 'FWD', 'STOP2', 'REV')</p>
-<p>state, pending, duty = 0, None, 0</p>
-<p>last_btn, t_btn, t_pr = 1, time.ticks_ms, time.ticks_ms</p>
-<p>while True:</p>
-<p>b = btn.value; now = time.ticks_ms</p>
-<p>if last_btn == 1 and b == 0 and time.ticks_diff(now, t_btn) &gt; 200
-and pending is None:</p>
-<p>pending = (state + 1) % 4 # ขอเปลี่ยนสถานะ</p>
-<p>t_btn = now</p>
-<p>last_btn = b</p>
-<p>target = pot.read * 16 if state in (1, 3) else 0 # 0..65520</p>
-<p>if pending is not None: target = 0 # ลดดิวตี้เป็น 0 ก่อนเปลี่ยนทิศ</p>
-<p>if duty &lt; target: duty = min(duty + RAMP, target)</p>
-<p>elif duty &gt; target: duty = max(duty - RAMP, target)</p>
-<p>ena.duty_u16(duty)</p>
-<p>if pending is not None and duty == 0: # เปลี่ยนทิศเมื่อหยุดสนิท</p>
-<p>state, pending = pending, None</p>
-<p>if state == 1: in1.value(1); in2.value(0)</p>
-<p>elif state == 3: in1.value(0); in2.value(1)</p>
-<p>else: in1.value(0); in2.value(0)</p>
-<p>if time.ticks_diff(now, t_pr) &gt;= 200:</p>
-<p>pct = duty * 100 / 65535</p>
-<p>vavg = VS * pct / 100</p>
-<p>print("&gt;DUTY_PCT:{:.1f}".format(pct));
-print("&gt;V_AVG:{:.2f}".format(vavg))</p>
-<p>print("&gt;P_EST_W:{:.2f}".format(vavg * I_NOM));
-print("&gt;STATE:{}".format(state))</p>
-<p>print("state={} duty={:.1f}% Vavg={:.2f}V
-P~{:.2f}W".format(NAMES[state], pct, vavg, vavg * I_NOM))</p>
-<p>t_pr = now</p>
-<p>time.sleep_ms(20)</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```python
+# main.py - ESP32 MicroPython: ควบคุมมอเตอร์ DC ด้วย H-Bridge + PWM + State Machine
+from machine import Pin, PWM, ADC
+import time
+
+in1 = Pin(26, Pin.OUT); in2 = Pin(27, Pin.OUT)
+ena = PWM(Pin(25), freq=1000); ena.duty_u16(0)     # PWM 1 kHz
+pot = ADC(Pin(34)); pot.atten(ADC.ATTN_11DB)       # ค่า 0-4095
+btn = Pin(4, Pin.IN, Pin.PULL_UP)
+VS = 9.0                # แรงดันแหล่งจ่ายมอเตอร์ (V) วัดจริงแล้วแก้ค่า
+I_NOM = 0.30            # กระแสโดยประมาณ (A) วัดด้วยมัลติมิเตอร์แล้วแก้ค่า
+RAMP = 1500             # ก้าวเพิ่มดิวตี้ต่อ 20 ms (Soft start)
+NAMES = ('STOP', 'FWD', 'STOP2', 'REV')
+
+state, pending, duty = 0, None, 0
+last_btn, t_btn, t_pr = 1, time.ticks_ms(), time.ticks_ms()
+
+while True:
+    b = btn.value(); now = time.ticks_ms()
+    if last_btn == 1 and b == 0 and time.ticks_diff(now, t_btn) > 200 and pending is None:
+        pending = (state + 1) % 4                    # ขอเปลี่ยนสถานะ
+        t_btn = now
+    last_btn = b
+
+    target = pot.read() * 16 if state in (1, 3) else 0  # 0..65520
+    if pending is not None: target = 0               # ลดดิวตี้เป็น 0 ก่อนเปลี่ยนทิศ
+    if duty < target:   duty = min(duty + RAMP, target)
+    elif duty > target: duty = max(duty - RAMP, target)
+    ena.duty_u16(duty)
+
+    if pending is not None and duty == 0:            # เปลี่ยนทิศเมื่อหยุดสนิท
+        state, pending = pending, None
+        if state == 1:   in1.value(1); in2.value(0)
+        elif state == 3: in1.value(0); in2.value(1)
+        else:            in1.value(0); in2.value(0)
+
+    if time.ticks_diff(now, t_pr) >= 200:
+        pct = duty * 100 / 65535
+        vavg = VS * pct / 100
+        print(">DUTY_PCT:{:.1f}".format(pct)); print(">V_AVG:{:.2f}".format(vavg))
+        print(">P_EST_W:{:.2f}".format(vavg * I_NOM)); print(">STATE:{}".format(state))
+        print("state={} duty={:.1f}% Vavg={:.2f}V P~{:.2f}W".format(NAMES[state], pct, vavg, vavg * I_NOM))
+        t_pr = now
+    time.sleep_ms(20)
+```
 
 ### 5. ขั้นตอนการตั้งค่า Dashboard บน VS Code
 

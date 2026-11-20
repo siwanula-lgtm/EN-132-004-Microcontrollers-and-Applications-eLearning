@@ -63,7 +63,7 @@
     },
     {
       "id": 3,
-      "question": "เหตุใด ds.scan คืนค่ารายการว่างได้",
+      "question": "เหตุใด ds.scan() คืนค่ารายการว่างได้",
       "choices": [
         {
           "key": "ก",
@@ -187,7 +187,7 @@
         },
         {
           "key": "ค",
-          "text": "oled.show"
+          "text": "oled.show()"
         },
         {
           "key": "ง",
@@ -199,7 +199,7 @@
         }
       ],
       "answer": "ค",
-      "explanation": "คำตอบที่ถูกต้องคือ ข้อ ค. oled.show — show ส่งบัฟเฟอร์ไปยังจอ"
+      "explanation": "คำตอบที่ถูกต้องคือ ข้อ ค. oled.show() — show ส่งบัฟเฟอร์ไปยังจอ"
     },
     {
       "id": 8,

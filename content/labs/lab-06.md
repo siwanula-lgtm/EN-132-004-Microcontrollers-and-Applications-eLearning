@@ -1,8 +1,8 @@
-## ใบงานปฏิบัติหน่วยเรียนที่ 6 เรื่องHMI ผ่านพอร์ตอนุกรม: อ่าน SHT30 ด้วย I2C ควบคุมเซอร์โวและ LED ด้วยคำสั่ง ASCII และทดสอบ UART loopback แสดงผลบน VS Code Dashboard
+## ใบงานปฏิบัติหน่วยเรียนที่ 6.1 เรื่องHMI ผ่านพอร์ตอนุกรม: อ่าน SHT30 ด้วย I2C ควบคุมเซอร์โวและ LED ด้วยคำสั่ง ASCII และทดสอบ UART loopback แสดงผลบน VS Code Dashboard
 
 | รหัสวิชา: EN-132-004                                 | ชื่อวิชา: Microcontrollers and Applications  |
 |----------------------------------------------------|-------------------------------------------|
-| หน่วยเรียนที่ 6 / สัปดาห์ที่ 9–10                          | เวลาปฏิบัติ: 4 ชั่วโมง (240 นาที)               |
+| หน่วยเรียนที่ 6 / สัปดาห์ที่ 9                          | เวลาปฏิบัติ: 2 ชั่วโมง (120 นาที)               |
 | ชื่อกลุ่ม: ........................................... | วันที่ปฏิบัติ: ........../........../.......... |
 
 ### 1. จุดประสงค์การทดลอง/การปฏิบัติงาน
@@ -43,7 +43,7 @@ loopback
 
 5\. ให้ผู้สอนตรวจวงจรก่อนจ่ายไฟ
 
-![ภาพที่ 6.L แผนผังการต่อวงจร ESP32 กับ SHT30 เซอร์โว LED และ UART loopback](/images/book/b04_image102.png)
+![ภาพที่ 6.L1 แผนผังการต่อวงจร ESP32 กับ SHT30 เซอร์โว LED และ UART loopback](/images/book/b04_image102.png)
 
 (ที่มา: ผู้จัดทำ)
 
@@ -52,78 +52,69 @@ loopback
 คัดลอกโค้ดต่อไปนี้ลงในไฟล์ main.py แล้วอัปโหลดไปยังบอร์ด ESP32 ด้วย VS Code
 (MicroPico/Pymakr Extension)
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># main.py - ESP32 MicroPython: HMI ผ่านพอร์ตอนุกรม + SHT30 (I2C) +
-เซอร์โว + UART loopback</p>
-<p>from machine import Pin, I2C, PWM, UART</p>
-<p>import sys, select, time</p>
-<p>i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100000)</p>
-<p>SHT = 0x44</p>
-<p>servo = PWM(Pin(13), freq=50)</p>
-<p>led = Pin(2, Pin.OUT)</p>
-<p>u2 = UART(2, baudrate=115200, tx=17, rx=16)</p>
-<p>poll = select.poll; poll.register(sys.stdin, select.POLLIN)</p>
-<p>def crc8(data):</p>
-<p>c = 0xFF</p>
-<p>for x in data:</p>
-<p>c ^= x</p>
-<p>for _ in range(8):</p>
-<p>c = ((c &lt;&lt; 1) ^ 0x31) &amp; 0xFF if c &amp; 0x80 else (c
-&lt;&lt; 1) &amp; 0xFF</p>
-<p>return c</p>
-<p>def read_sht:</p>
-<p>i2c.writeto(SHT, b'\x24\x00'); time.sleep_ms(20)</p>
-<p>d = i2c.readfrom(SHT, 6)</p>
-<p>if crc8(d[0:2]) != d[2] or crc8(d[3:5]) != d[5]:</p>
-<p>return None</p>
-<p>t = -45 + 175 * ((d[0] &lt;&lt; 8) | d[1]) / 65535</p>
-<p>rh = 100 * ((d[3] &lt;&lt; 8) | d[4]) / 65535</p>
-<p>return t, rh</p>
-<p>def set_angle(a):</p>
-<p>a = max(0, min(180, a))</p>
-<p>ms = 0.5 + a / 90 # 0.5-2.5 ms</p>
-<p>servo.duty_u16(int(ms / 20 * 65535))</p>
-<p>return a</p>
-<p>def uart_test:</p>
-<p>u2.write(b'PING\n'); time.sleep_ms(50)</p>
-<p>return 1 if (u2.any and u2.readline == b'PING\n') else 0</p>
-<p>angle, period = set_angle(90), 1000</p>
-<p>t_pr = time.ticks_ms</p>
-<p>print("READY: ANGLE n | LED 0/1 | RATE ms | GET")</p>
-<p>while True:</p>
-<p>if poll.poll(0): # มีคำสั่งจาก HMI</p>
-<p>cmd = sys.stdin.readline.strip.split</p>
-<p>if len(cmd) == 2 and cmd[0] == 'ANGLE' and
-cmd[1].lstrip('-').isdigit:</p>
-<p>angle = set_angle(int(cmd[1])); print("OK ANGLE", angle)</p>
-<p>elif len(cmd) == 2 and cmd[0] == 'LED' and cmd[1] in ('0', '1'):</p>
-<p>led.value(int(cmd[1])); print("OK LED", cmd[1])</p>
-<p>elif len(cmd) == 2 and cmd[0] == 'RATE' and cmd[1].isdigit:</p>
-<p>period = max(200, int(cmd[1])); print("OK RATE", period)</p>
-<p>elif cmd and cmd[0] == 'GET':</p>
-<p>r = read_sht; print("T={:.1f} RH={:.1f}".format(*r) if r else "ERR
-SENSOR")</p>
-<p>elif cmd:</p>
-<p>print("ERR")</p>
-<p>if time.ticks_diff(time.ticks_ms, t_pr) &gt;= period:</p>
-<p>r = read_sht</p>
-<p>if r:</p>
-<p>print("&gt;TEMP_C:{:.2f}".format(r[0]));
-print("&gt;RH:{:.1f}".format(r[1]))</p>
-<p>print("&gt;ANGLE:{}".format(angle));
-print("&gt;UART_OK:{}".format(uart_test))</p>
-<p>t_pr = time.ticks_ms</p>
-<p>time.sleep_ms(10)</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```python
+# main.py - ESP32 MicroPython: HMI ผ่านพอร์ตอนุกรม + SHT30 (I2C) + เซอร์โว + UART loopback
+from machine import Pin, I2C, PWM, UART
+import sys, select, time
+
+i2c = I2C(0, scl=Pin(22), sda=Pin(21), freq=100000)
+SHT = 0x44
+servo = PWM(Pin(13), freq=50)
+led = Pin(2, Pin.OUT)
+u2 = UART(2, baudrate=115200, tx=17, rx=16)
+poll = select.poll(); poll.register(sys.stdin, select.POLLIN)
+
+def crc8(data):
+    c = 0xFF
+    for x in data:
+        c ^= x
+        for _ in range(8):
+            c = ((c << 1) ^ 0x31) & 0xFF if c & 0x80 else (c << 1) & 0xFF
+    return c
+
+def read_sht():
+    i2c.writeto(SHT, b'\x24\x00'); time.sleep_ms(20)
+    d = i2c.readfrom(SHT, 6)
+    if crc8(d[0:2]) != d[2] or crc8(d[3:5]) != d[5]:
+        return None
+    t = -45 + 175 * ((d[0] << 8) | d[1]) / 65535
+    rh = 100 * ((d[3] << 8) | d[4]) / 65535
+    return t, rh
+
+def set_angle(a):
+    a = max(0, min(180, a))
+    ms = 0.5 + a / 90                       # 0.5-2.5 ms
+    servo.duty_u16(int(ms / 20 * 65535))
+    return a
+
+def uart_test():
+    u2.write(b'PING\n'); time.sleep_ms(50)
+    return 1 if (u2.any() and u2.readline() == b'PING\n') else 0
+
+angle, period = set_angle(90), 1000
+t_pr = time.ticks_ms()
+print("READY: ANGLE n | LED 0/1 | RATE ms | GET")
+while True:
+    if poll.poll(0):                         # มีคำสั่งจาก HMI
+        cmd = sys.stdin.readline().strip().split()
+        if len(cmd) == 2 and cmd[0] == 'ANGLE' and cmd[1].lstrip('-').isdigit():
+            angle = set_angle(int(cmd[1])); print("OK ANGLE", angle)
+        elif len(cmd) == 2 and cmd[0] == 'LED' and cmd[1] in ('0', '1'):
+            led.value(int(cmd[1])); print("OK LED", cmd[1])
+        elif len(cmd) == 2 and cmd[0] == 'RATE' and cmd[1].isdigit():
+            period = max(200, int(cmd[1])); print("OK RATE", period)
+        elif cmd and cmd[0] == 'GET':
+            r = read_sht(); print("T={:.1f} RH={:.1f}".format(*r) if r else "ERR SENSOR")
+        elif cmd:
+            print("ERR")
+    if time.ticks_diff(time.ticks_ms(), t_pr) >= period:
+        r = read_sht()
+        if r:
+            print(">TEMP_C:{:.2f}".format(r[0])); print(">RH:{:.1f}".format(r[1]))
+        print(">ANGLE:{}".format(angle)); print(">UART_OK:{}".format(uart_test()))
+        t_pr = time.ticks_ms()
+    time.sleep_ms(10)
+```
 
 ### 5. ขั้นตอนการตั้งค่า Dashboard บน VS Code
 
@@ -210,6 +201,213 @@ print("&gt;UART_OK:{}".format(uart_test))</p>
 
 เฉลยแนวคิด: (1) สแกนไม่พบอุปกรณ์ ; (2) ป้องกันการสั่งงานผิดพลาดและแจ้งผู้ใช้ ; (3)
 วนเพิ่มมุมทีละน้อยพร้อมหน่วงเวลาแบบไม่บล็อก ; (4) 50 บิต/115200 ≈ 434 µs
+
+## ใบงานปฏิบัติหน่วยเรียนที่ 6.2 เรื่องควบคุมสายพานลำเลียงจำลองด้วย ESP32: รับคำสั่งจาก HMI ผ่านพอร์ตอนุกรม นับและคัดแยกชิ้นงานด้วยเซนเซอร์ IR และเซอร์โว ควบคุมความเร็วด้วย PWM แสดงผลบน VS Code Dashboard
+
+| รหัสวิชา: EN-132-004 | ชื่อวิชา: Microcontrollers and Applications |
+|---|---|
+| หน่วยเรียนที่ 6 / สัปดาห์ที่ 10 | เวลาปฏิบัติ: 2 ชั่วโมง (120 นาที) |
+| ชื่อกลุ่ม: ........................................... | วันที่ปฏิบัติ: ........../........../.......... |
+
+### 1. จุดประสงค์การทดลอง/การปฏิบัติงาน
+
+1\. เพื่อให้ผู้เรียนออกแบบชุดคำสั่ง HMI แบบ ASCII (START/STOP/SPEED/SORT/GET/RESET) และเขียนตัวแยกคำสั่งผ่านพอร์ตอนุกรมได้
+
+2\. เพื่อให้ผู้เรียนควบคุมความเร็วมอเตอร์สายพานด้วย PWM ผ่านไดรเวอร์ L298N ได้
+
+3\. เพื่อให้ผู้เรียนนับและจำแนกชิ้นงานด้วยเซนเซอร์ IR สองระดับ และสั่งเซอร์โวคัดแยกแบบหน่วงเวลาโดยไม่บล็อกโปรแกรมได้
+
+4\. เพื่อให้ผู้เรียนจัดลำดับความสำคัญของปุ่มหยุดฉุกเฉินเหนือคำสั่งจาก HMI และตรวจสอบผลบน Dashboard ได้
+
+### 2. รายการอุปกรณ์ (Bill of Materials - BOM)
+
+1\. บอร์ด ESP32 Development Board จำนวน 1 ชุด
+
+2\. ชุดสายพานลำเลียงจำลองพร้อมมอเตอร์ DC 6–12 V และไดรเวอร์ L298N 1 ชุด (หรือมอเตอร์ DC บนแท่นทดลอง)
+
+3\. โมดูลเซนเซอร์ IR ตรวจวัตถุแบบเอาต์พุตดิจิทัล 2 ตัว (ระดับต่ำและระดับสูง)
+
+4\. เซอร์โว SG90 (หรือเทียบเท่า) 1 ตัว ปุ่มหยุดฉุกเฉิน (หรือปุ่มกด) 1 ตัว และ LED 1 ดวงพร้อม 330 Ω
+
+5\. แหล่งจ่ายมอเตอร์ 9 V และ 5 V สำหรับเซอร์โว (ต่อ GND ร่วมกับ ESP32) ชิ้นงานสูงและต่ำอย่างละ 5 ชิ้น
+
+6\. VS Code พร้อมส่วนขยาย MicroPico (หรือ Pymakr) และ Teleplot, เฟิร์มแวร์ MicroPython
+
+### 3. แผนผังและขั้นตอนการต่อวงจร (Circuit Schematic & Wiring)
+
+1\. ต่อ L298N: ENA → GPIO25, IN1 → GPIO26, IN2 → GPIO27 จ่ายไฟมอเตอร์เข้าขั้ว 12V/GND ของ L298N และต่อ GND ร่วมกับ ESP32
+
+2\. ต่อเซนเซอร์ IR ระดับต่ำ: OUT → GPIO35 และระดับสูง: OUT → GPIO34 (VCC → 3V3, GND → GND)
+
+3\. ต่อเซอร์โว: สายสัญญาณ → GPIO13 สายแดง → 5 V สายน้ำตาล → GND ต่อปุ่มหยุดฉุกเฉินระหว่าง GPIO4 กับ GND และ LED ผ่าน 330 Ω เข้า GPIO2
+
+4\. ติดตั้งเซนเซอร์ระดับสูงเหนือเซนเซอร์ระดับต่ำในแนวเดียวกัน วัดระยะจากเซนเซอร์ถึงเซอร์โว และให้ผู้สอนตรวจก่อนจ่ายไฟ
+
+![ภาพที่ 6.L2 แผนผังการต่อวงจร ESP32 กับไดรเวอร์ L298N เซนเซอร์ IR สองระดับ เซอร์โวคัดแยก และปุ่มหยุดฉุกเฉิน](/images/book/b04_lab6_2_wiring.png)
+
+(ที่มา: ผู้จัดทำ)
+
+### 4. โค้ดภาษา Python (MicroPython) สำหรับ ESP32
+
+คัดลอกโค้ดต่อไปนี้ลงในไฟล์ main.py แล้วอัปโหลดไปยังบอร์ด ESP32 ด้วย VS Code (MicroPico/Pymakr Extension)
+
+```python
+# main.py - ESP32 MicroPython: สายพานจำลอง + คำสั่ง HMI แบบ ASCII + นับชิ้นงาน + คัดแยกด้วยเซอร์โว
+from machine import Pin, PWM
+import sys, select, time
+
+ena = PWM(Pin(25), freq=1000); ena.duty_u16(0)       # PWM ความเร็วมอเตอร์สายพาน (ENA ของ L298N)
+in1 = Pin(26, Pin.OUT, value=1); in2 = Pin(27, Pin.OUT, value=0)   # ทิศทางเดินหน้าคงที่
+ir_part = Pin(35, Pin.IN)                            # IR ตรวจชิ้นงาน (โมดูลให้ 0 เมื่อพบวัตถุ)
+ir_tall = Pin(34, Pin.IN)                            # IR ระดับสูง: 0 = ชิ้นงานสูง
+servo = PWM(Pin(13), freq=50)                        # เซอร์โวผลักคัดแยก
+estop = Pin(4, Pin.IN, Pin.PULL_UP)                  # ปุ่มหยุดฉุกเฉิน: กด = 0
+led = Pin(2, Pin.OUT)                                # ไฟสถานะสายพาน
+poll = select.poll(); poll.register(sys.stdin, select.POLLIN)
+TRAVEL_MS, PUSH_MS = 800, 600                        # เวลาเดินทางถึงเซอร์โว / เวลาผลัก
+
+def servo_deg(a):
+    servo.duty_u16(int((0.5 + a / 90) / 20 * 65535))   # 0.5-2.5 ms ที่ 50 Hz
+
+def set_speed(pct):
+    ena.duty_u16(int(max(0, min(100, pct)) * 655.35))
+
+state, speed, sort_on = "STOP", 60, True
+total = tall = short = 0
+push_at = back_at = None
+last_ir = 1
+t_pr = time.ticks_ms()
+servo_deg(0)
+print("READY: START | STOP | SPEED n | SORT ON/OFF | GET | RESET")
+while True:
+    now = time.ticks_ms()
+    if poll.poll(0):                                 # มีคำสั่งจาก HMI (Serial)
+        cmd = sys.stdin.readline().strip().upper().split()
+        if cmd == ["START"] and state != "ESTOP":
+            state = "RUN"; print("OK START")
+        elif cmd == ["STOP"]:
+            if state != "ESTOP": state = "STOP"
+            print("OK STOP")
+        elif len(cmd) == 2 and cmd[0] == "SPEED" and cmd[1].isdigit():
+            speed = min(100, int(cmd[1])); print("OK SPEED", speed)
+        elif len(cmd) == 2 and cmd[0] == "SORT" and cmd[1] in ("ON", "OFF"):
+            sort_on = cmd[1] == "ON"; print("OK SORT", cmd[1])
+        elif cmd == ["GET"]:
+            print("STATE={} TOTAL={} TALL={} SHORT={}".format(state, total, tall, short))
+        elif cmd == ["RESET"] and estop.value() == 1:
+            state = "STOP"; total = tall = short = 0; print("OK RESET")
+        elif cmd:
+            print("ERR")
+    if estop.value() == 0:                           # ฉุกเฉินมีลำดับความสำคัญสูงสุด
+        state = "ESTOP"
+    set_speed(speed if state == "RUN" else 0)
+    led.value(1 if state == "RUN" else 0)
+
+    p = ir_part.value()
+    if state == "RUN" and last_ir == 1 and p == 0:   # ขอบขาลง = ชิ้นงานมาถึงเซนเซอร์
+        total += 1
+        if ir_tall.value() == 0:
+            tall += 1
+            if sort_on:
+                push_at = time.ticks_add(now, TRAVEL_MS)
+        else:
+            short += 1
+    last_ir = p
+    if push_at is not None and time.ticks_diff(now, push_at) >= 0:
+        servo_deg(90); back_at = time.ticks_add(now, PUSH_MS); push_at = None
+    if back_at is not None and time.ticks_diff(now, back_at) >= 0:
+        servo_deg(0); back_at = None
+
+    if time.ticks_diff(now, t_pr) >= 300:
+        print(">TOTAL:{}".format(total)); print(">TALL:{}".format(tall)); print(">SHORT:{}".format(short))
+        print(">SPEED:{}".format(speed if state == "RUN" else 0)); print(">STATE:{}".format(("STOP", "RUN", "ESTOP").index(state)))
+        t_pr = now
+    time.sleep_ms(5)
+```
+
+### 5. ขั้นตอนการตั้งค่า Dashboard บน VS Code
+
+1\. เปิด Visual Studio Code เชื่อมต่อ ESP32 ด้วยสาย USB แล้วเลือกพอร์ต (COM Port) ที่ถูกต้องในส่วนขยาย MicroPico
+
+2\. สร้างไฟล์ main.py วางโค้ดตามข้อ 4 แล้วกด Upload/Run ไปยังบอร์ด
+
+3\. เปิด Serial Monitor/Terminal ของ MicroPico พิมพ์คำสั่ง START, SPEED 80, SORT ON, GET, STOP และคำสั่งผิดรูปแบบ แล้วบันทึกคำตอบในตารางที่ 6.4
+
+4\. เปิด Teleplot ตั้งอัตรารับส่ง 115200 สังเกตกราฟ TOTAL, TALL, SHORT, SPEED และ STATE
+
+5\. ป้อนชิ้นงานต่ำ 6 ชิ้น และชิ้นงานสูง 4 ชิ้นสลับกัน ปรับค่า TRAVEL_MS ให้เซอร์โวผลักตรงชิ้นงาน แล้วบันทึกผลในตารางที่ 6.5
+
+6\. กดปุ่มหยุดฉุกเฉินขณะสายพานทำงาน ทดลองส่งคำสั่ง START และ RESET ขณะยังกดปุ่มอยู่ แล้วบันทึกผล
+
+### 6. ตารางบันทึกผลการทดลอง
+
+### ตารางที่ 6.4 คำสั่ง HMI และคำตอบจากบอร์ด
+
+| **คำสั่งที่ส่ง** | **คำตอบที่คาดหวัง** | **คำตอบที่ได้จริง** | **สถานะสายพาน** |
+|---|---|---|---|
+| START | OK START |  |  |
+| SPEED 80 | OK SPEED 80 |  |  |
+| SORT ON | OK SORT ON |  |  |
+| GET | STATE=RUN TOTAL=… TALL=… SHORT=… |  |  |
+| SPEED abc | ERR |  |  |
+| STOP | OK STOP |  |  |
+
+### ตารางที่ 6.5 ผลการนับและคัดแยกชิ้นงาน (ป้อน 10 ชิ้น)
+
+| **รายการ** | **ค่าที่ควรได้** | **ค่าจาก Dashboard** | **ผลการคัดแยกจริง** |
+|---|---|---|---|
+| TOTAL | 10 |  |  |
+| TALL (ถูกผลักออก) | 4 |  |  |
+| SHORT (ผ่านไปปลายสายพาน) | 6 |  |  |
+| TRAVEL_MS ที่ปรับแล้ว | – |  |  |
+
+### 7. สรุปและวิเคราะห์ผลการทดลอง
+
+ให้สรุปลำดับการทำงานของโปรแกรมตั้งแต่รับคำสั่งจนถึงการคัดแยก เหตุใดจึงใช้ ticks_add/ticks_diff กำหนดเวลาผลักแทนการใช้ sleep ผลของความเร็วสายพานต่อค่า TRAVEL_MS ที่เหมาะสม และเหตุผลที่ปุ่มหยุดฉุกเฉินต้องมีลำดับความสำคัญเหนือคำสั่ง HMI
+
+> ..................................................................................................
+>
+> ..................................................................................................
+>
+> ..................................................................................................
+>
+> ..................................................................................................
+>
+> ..................................................................................................
+
+### คำถามท้ายการทดลอง/การปฏิบัติ
+
+1\. ถ้าเพิ่มความเร็วสายพานจาก SPEED 60 เป็น 90 ต้องปรับ TRAVEL_MS เพิ่มขึ้นหรือลดลง เพราะเหตุใด
+
+..................................................................................................
+
+2\. เหตุใดจึงต้องตรวจขอบขาลงของ ir_part แทนการตรวจว่า ir_part เป็น 0
+
+..................................................................................................
+
+3\. ถ้ามีชิ้นงานสูงสองชิ้นอยู่ห่างกันน้อยกว่า TRAVEL_MS โปรแกรมนี้จะคัดแยกผิดอย่างไร และควรแก้ด้วยโครงสร้างข้อมูลแบบใด
+
+..................................................................................................
+
+4\. เหตุใดคำสั่ง RESET จึงต้องตรวจว่าปุ่มหยุดฉุกเฉินถูกปลดแล้ว
+
+..................................................................................................
+
+### 8. แบบประเมินทักษะการปฏิบัติงาน (Scoring Rubric - ทักษะพิสัย)
+
+### คะแนนรวม 20 คะแนน (5 หัวข้อ × ระดับ 1–4 หัวข้อละไม่เกิน 4 คะแนน)
+
+| **หัวข้อการประเมิน**                    | **4 (ดีมาก)**                             | **3 (ดี)**              | **2 (พอใช้)**                  | **1 (ปรับปรุง)**      | **คะแนน** |
+|--------------------------------------|------------------------------------------|------------------------|-------------------------------|---------------------|-----------|
+| 1\. การเตรียมเครื่องมือ/อุปกรณ์            | ตรวจครบ ถูกต้อง และเตรียมก่อนเริ่มโดยไม่ต้องเตือน | ครบถ้วนแต่ต้องตรวจซ้ำ 1 จุด | ขาดอุปกรณ์/ต้องเตือนหลายจุด        | ไม่เตรียมหรือใช้อุปกรณ์ผิด |           |
+| 2\. ลำดับขั้นตอนการเขียน/ทดสอบโปรแกรม    | ทำตามลำดับถูกต้องครบทุกขั้น                    | ผิดลำดับเล็กน้อย แก้ได้เอง   | ต้องได้รับคำแนะนำจึงทำต่อได้        | ทำไม่ครบขั้นตอน        |           |
+| 3\. ความถูกต้องของผลการทดสอบ/การบันทึกผล | ผลตรงทุกชุดและบันทึกครบ                      | ผลตรงเกือบทั้งหมด บันทึกครบ | ผลคลาดเคลื่อนหลายจุดหรือบันทึกไม่ครบ | ผลไม่ตรงและไม่บันทึก    |           |
+| 4\. การวิเคราะห์และสรุปผล               | วิเคราะห์เชื่อมโยงทฤษฎีและตอบคำถามถูกต้องครบ    | วิเคราะห์ถูกต้องบางส่วน     | สรุปได้เพียงผลที่เห็น               | ไม่สรุป/สรุปไม่ถูกต้อง    |           |
+| 5\. ความสะอาดและความปลอดภัย           | ปฏิบัติตามกฎความปลอดภัยครบและเก็บของเรียบร้อย   | บกพร่องเล็กน้อย 1 จุด      | บกพร่องหลายจุด ต้องตักเตือน        | ละเลยความปลอดภัย     |           |
+
+ผู้ประเมิน .......................................................... ตำแหน่ง ...................... วันที่ ....................
+
+เฉลยแนวคิด: (1) ลดลง เพราะสายพานเร็วขึ้นชิ้นงานใช้เวลาเดินทางถึงเซอร์โวน้อยลง (t = ระยะทาง / ความเร็ว) ; (2) ชิ้นงานหนึ่งชิ้นบังเซนเซอร์หลายรอบลูป ถ้าตรวจระดับ 0 จะนับซ้ำหลายครั้ง ; (3) push_at เก็บได้ค่าเดียว ชิ้นที่สองจะเขียนทับเวลาของชิ้นแรก ควรใช้คิว (list) เก็บเวลาผลักของแต่ละชิ้น ; (4) เพื่อไม่ให้ระบบกลับสู่สถานะพร้อมทำงานขณะยังอยู่ในสภาวะฉุกเฉิน
 
 ### ใบมอบงานหน่วยเรียนที่ 6
 
@@ -306,7 +504,8 @@ print("&gt;UART_OK:{}".format(uart_test))</p>
 |-------------------------------------|--------------|--------------|
 | แบบทดสอบก่อนเรียน                     | 10           |              |
 | แบบฝึกหัดท้ายหน่วย (10 ข้อ × 10 คะแนนดิบ) | 100          |              |
-| ใบงานภาคปฏิบัติ (ทักษะพิสัย)              | 20           |              |
+| ใบงานภาคปฏิบัติที่ 6.1 (ทักษะพิสัย)              | 20           |              |
+| ใบงานภาคปฏิบัติที่ 6.2 (ทักษะพิสัย)              | 20           |              |
 | ใบมอบงาน/รายงาน (พุทธิพิสัย)            | 16           |              |
 | จิตพิสัย                               | 20           |              |
 | แบบทดสอบหลังเรียน                     | 10           |              |
@@ -319,7 +518,7 @@ Given/Determine = 1, การกำหนด Assumption/เขียน system 
 
 ### ส่วนที่ 3 เกณฑ์ประเมินทักษะพิสัย (Psychomotor Domain)
 
-ใช้แบบประเมินทักษะการปฏิบัติงานของใบงานที่ 6 (5 หัวข้อ × 4 ระดับ รวม 20 คะแนน: 4 =
+ใช้แบบประเมินทักษะการปฏิบัติงานของใบงานที่ 6.1 และ 6.2 (ใบงานละ 5 หัวข้อ × 4 ระดับ รวม 20 คะแนน: 4 =
 ดีมาก, 3 = ดี, 2 = พอใช้, 1 = ปรับปรุง)
 
 ### ส่วนที่ 4 เกณฑ์ประเมินจิตพิสัย (Affective Domain) คะแนนเต็ม 20 คะแนน

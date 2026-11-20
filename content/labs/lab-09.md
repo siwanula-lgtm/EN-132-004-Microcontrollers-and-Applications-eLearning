@@ -1,8 +1,8 @@
-## ใบงานปฏิบัติหน่วยเรียนที่ 9 เรื่องตัวควบคุมกระบวนการขนาดเล็ก (ระดับ–อุณหภูมิ) ด้วยเครื่องสถานะ ฮิสเทอรีซิส สัญญาณเตือน และบันทึกข้อมูลบน VS Code Dashboard
+## ใบงานปฏิบัติหน่วยเรียนที่ 9.1 เรื่องตัวควบคุมกระบวนการขนาดเล็ก (ระดับ–อุณหภูมิ) ด้วยเครื่องสถานะ ฮิสเทอรีซิส สัญญาณเตือน และบันทึกข้อมูลบน VS Code Dashboard
 
 | รหัสวิชา: EN-132-004                                 | ชื่อวิชา: Microcontrollers and Applications  |
 |----------------------------------------------------|-------------------------------------------|
-| หน่วยเรียนที่ 9 / สัปดาห์ที่ 15–16                         | เวลาปฏิบัติ: 4 ชั่วโมง (240 นาที)               |
+| หน่วยเรียนที่ 9 / สัปดาห์ที่ 15                         | เวลาปฏิบัติ: 2 ชั่วโมง (120 นาที)               |
 | ชื่อกลุ่ม: ........................................... | วันที่ปฏิบัติ: ........../........../.......... |
 
 ### 1. จุดประสงค์การทดลอง/การปฏิบัติงาน
@@ -42,7 +42,7 @@
 
 5\. ไม่ใช้ไฟบ้านในใบงานนี้ และให้ผู้สอนตรวจวงจรก่อนจ่ายไฟ
 
-![ภาพที่ 9.L แผนผังการต่อวงจรตัวควบคุมกระบวนการขนาดเล็ก](/images/book/b04_image153.png)
+![ภาพที่ 9.L1 แผนผังการต่อวงจรตัวควบคุมกระบวนการขนาดเล็ก](/images/book/b04_image153.png)
 
 (ที่มา: ผู้จัดทำ)
 
@@ -50,76 +50,69 @@
 
 คัดลอกโค้ดต่อไปนี้ลงในไฟล์ main.py แล้วอัปโหลดไปยังบอร์ด ESP32 ด้วย VS Code
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># main.py - ESP32 MicroPython: Mini process controller (level +
-temperature)</p>
-<p>from machine import Pin, ADC, PWM</p>
-<p>import time, math</p>
-<p>lvl = ADC(Pin(34)); lvl.atten(ADC.ATTN_11DB)</p>
-<p>ntc = ADC(Pin(35)); ntc.atten(ADC.ATTN_11DB)</p>
-<p>pump = PWM(Pin(25), freq=1000)</p>
-<p>heater = Pin(27, Pin.OUT)</p>
-<p>buzzer = Pin(26, Pin.OUT)</p>
-<p>estop = Pin(4, Pin.IN, Pin.PULL_UP)</p>
-<p>LV_HI, LV_LO, LV_ALM = 80, 40, 10 # % level</p>
-<p>SP, H, T_ALM = 45.0, 2.0, 60.0 # deg C</p>
-<p>N = 8</p>
-<p>bl, bt = [0]*N, [0]*N</p>
-<p>k = 0</p>
-<p>def avg(b): return sum(b) / len(b)</p>
-<p>def level_pct(raw): return raw * 100 / 4095</p>
-<p>def temp_c(raw): # NTC 10k, B=3950, divider 10k to GND</p>
-<p>raw = max(1, min(4094, raw))</p>
-<p>r = 10000 * raw / (4095 - raw)</p>
-<p>inv = 1/298.15 + math.log(r / 10000) / 3950</p>
-<p>return 1/inv - 273.15</p>
-<p>state, heat_on = "IDLE", 0</p>
-<p>def set_outputs(p, h, b):</p>
-<p>pump.duty_u16(int(p / 100 * 65535)); heater.value(h);
-buzzer.value(b)</p>
-<p>set_outputs(0, 0, 0)</p>
-<p>t_log = time.ticks_ms</p>
-<p>while True:</p>
-<p>bl[k] = lvl.read; bt[k] = ntc.read; k = (k + 1) % N</p>
-<p>L, T = level_pct(avg(bl)), temp_c(avg(bt))</p>
-<p>if estop.value == 0: # emergency stop -&gt; safe</p>
-<p>state, heat_on = "IDLE", 0</p>
-<p>elif state == "IDLE":</p>
-<p>if L &gt; LV_ALM: state = "FILL" # start when sensor alive</p>
-<p>elif state == "FILL":</p>
-<p>if L &gt;= LV_HI: state = "HEAT"</p>
-<p>elif state == "HEAT":</p>
-<p>if L &lt;= LV_LO: state = "FILL"</p>
-<p>if state in ("FILL", "HEAT") and (T &gt; T_ALM or L &lt; LV_ALM or
-avg(bl) &lt; 5):</p>
-<p>state = "ALARM"</p>
-<p>if state == "ALARM" and estop.value == 0 and T &lt; T_ALM and L &gt;
-LV_ALM:</p>
-<p>state = "IDLE"</p>
-<p>if state == "IDLE": set_outputs(0, 0, 0); heat_on = 0</p>
-<p>elif state == "FILL": set_outputs(80, 0, 0); heat_on = 0</p>
-<p>elif state == "HEAT":</p>
-<p>if T &lt; SP - H: heat_on = 1</p>
-<p>elif T &gt; SP + H: heat_on = 0</p>
-<p>set_outputs(0, heat_on, 0)</p>
-<p>elif state == "ALARM": set_outputs(0, 0, 1); heat_on = 0</p>
-<p>if time.ticks_diff(time.ticks_ms, t_log) &gt;= 1000:</p>
-<p>print("&gt;LEVEL:{:.1f}".format(L));
-print("&gt;TEMP_C:{:.1f}".format(T))</p>
-<p>print("&gt;HEATER:{}".format(heat_on))</p>
-<p>print("&gt;STATE:{}".format(["IDLE","FILL","HEAT","ALARM"].index(state)))</p>
-<p>t_log = time.ticks_ms</p>
-<p>time.sleep_ms(50)</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```python
+# main.py - ESP32 MicroPython: Mini process controller (level + temperature)
+from machine import Pin, ADC, PWM
+import time, math
+
+lvl = ADC(Pin(34)); lvl.atten(ADC.ATTN_11DB)
+ntc = ADC(Pin(35)); ntc.atten(ADC.ATTN_11DB)
+pump = PWM(Pin(25), freq=1000)
+heater = Pin(27, Pin.OUT)
+buzzer = Pin(26, Pin.OUT)
+estop = Pin(4, Pin.IN, Pin.PULL_UP)
+
+LV_HI, LV_LO, LV_ALM = 80, 40, 10      # % level
+SP, H, T_ALM = 45.0, 2.0, 60.0         # deg C
+
+N = 8
+bl, bt = [0]*N, [0]*N
+k = 0
+def avg(b): return sum(b) / len(b)
+
+def level_pct(raw): return raw * 100 / 4095
+
+def temp_c(raw):                       # NTC 10k, B=3950, divider 10k to GND
+    raw = max(1, min(4094, raw))
+    r = 10000 * raw / (4095 - raw)
+    inv = 1/298.15 + math.log(r / 10000) / 3950
+    return 1/inv - 273.15
+
+state, heat_on = "IDLE", 0
+def set_outputs(p, h, b):
+    pump.duty_u16(int(p / 100 * 65535)); heater.value(h); buzzer.value(b)
+
+set_outputs(0, 0, 0)
+t_log = time.ticks_ms()
+while True:
+    bl[k] = lvl.read(); bt[k] = ntc.read(); k = (k + 1) % N
+    L, T = level_pct(avg(bl)), temp_c(avg(bt))
+    if estop.value() == 0:                     # emergency stop -> safe
+        state, heat_on = "IDLE", 0
+    elif state == "IDLE":
+        if L > LV_ALM: state = "FILL"            # start when sensor alive
+    elif state == "FILL":
+        if L >= LV_HI: state = "HEAT"
+    elif state == "HEAT":
+        if L <= LV_LO: state = "FILL"
+    if state in ("FILL", "HEAT") and (T > T_ALM or L < LV_ALM or avg(bl) < 5):
+        state = "ALARM"
+    if state == "ALARM" and estop.value() == 0 and T < T_ALM and L > LV_ALM:
+        state = "IDLE"
+    if state == "IDLE":   set_outputs(0, 0, 0); heat_on = 0
+    elif state == "FILL": set_outputs(80, 0, 0); heat_on = 0
+    elif state == "HEAT":
+        if T < SP - H: heat_on = 1
+        elif T > SP + H: heat_on = 0
+        set_outputs(0, heat_on, 0)
+    elif state == "ALARM": set_outputs(0, 0, 1); heat_on = 0
+    if time.ticks_diff(time.ticks_ms(), t_log) >= 1000:
+        print(">LEVEL:{:.1f}".format(L)); print(">TEMP_C:{:.1f}".format(T))
+        print(">HEATER:{}".format(heat_on))
+        print(">STATE:{}".format(["IDLE","FILL","HEAT","ALARM"].index(state)))
+        t_log = time.ticks_ms()
+    time.sleep_ms(50)
+```
 
 ### 5. ขั้นตอนการตั้งค่า Dashboard บน VS Code
 
@@ -205,6 +198,204 @@ main.py
 เฉลยแนวคิด: (1) ฮีตเตอร์สลับถี่รอบ setpoint ; (2) ตรวจเซนเซอร์หลุด/ลัดวงจร ; (3)
 ใช้ PWM ตามผลต่าง (SP − T) × Kp ; (4) เปิดไฟล์ด้วย open(..., "a")
 และเขียนบรรทัดทุก 1 วินาที
+
+## ใบงานปฏิบัติหน่วยเรียนที่ 9.2 เรื่องโครงงานบูรณาการ: สถานีตรวจสอบคุณภาพชิ้นงานด้วยน้ำหนักจำลอง คัดแยกชิ้นงานดี–เสียด้วยเซอร์โว คำนวณตัวชี้วัดการผลิต บันทึกข้อมูล CSV และนำเสนอผลบน VS Code Dashboard
+
+| รหัสวิชา: EN-132-004 | ชื่อวิชา: Microcontrollers and Applications |
+|---|---|
+| หน่วยเรียนที่ 9 / สัปดาห์ที่ 16 | เวลาปฏิบัติ: 2 ชั่วโมง (120 นาที) |
+| ชื่อกลุ่ม: ........................................... | วันที่ปฏิบัติ: ........../........../.......... |
+
+### 1. จุดประสงค์การทดลอง/การปฏิบัติงาน
+
+1\. เพื่อให้ผู้เรียนวิเคราะห์ความต้องการและออกแบบเครื่องสถานะ WAIT/MEASURE/SORT/CLEAR/ESTOP ของสถานีตรวจสอบคุณภาพได้
+
+2\. เพื่อให้ผู้เรียนบูรณาการ ADC, PWM (เซอร์โว), GPIO และการบันทึกไฟล์ในโปรแกรมควบคุมเดียวได้
+
+3\. เพื่อให้ผู้เรียนคำนวณตัวชี้วัดการผลิต (Yield และอัตราการผลิต) และตรวจสอบกับข้อมูลใน qc_log.csv ได้
+
+4\. เพื่อให้ผู้เรียนทดสอบตามแผนการทดสอบ วิเคราะห์ผล และนำเสนอผลงานพร้อมข้อเสนอแนะการปรับปรุงได้
+
+### 2. รายการอุปกรณ์ (Bill of Materials - BOM)
+
+1\. บอร์ด ESP32 Development Board จำนวน 1 ชุด
+
+2\. โพเทนชิโอมิเตอร์ 10 kΩ 1 ตัว (จำลองโหลดเซลล์ 0–500 g) หรือโหลดเซลล์พร้อม HX711
+
+3\. เซอร์โว SG90 1 ตัว ปุ่มกด 2 ตัว (ชิ้นงานเข้าสถานี และหยุดฉุกเฉิน)
+
+4\. LED เขียวและแดงอย่างละ 1 ดวงพร้อม 330 Ω และบัซเซอร์แบบแอ็กทีฟ 1 ตัว
+
+5\. เบรดบอร์ด สายจัมเปอร์ สาย USB และแหล่งจ่าย 5 V สำหรับเซอร์โว
+
+6\. VS Code พร้อมส่วนขยาย MicroPico (หรือ Pymakr) และ Teleplot, เฟิร์มแวร์ MicroPython
+
+### 3. แผนผังและขั้นตอนการต่อวงจร (Circuit Schematic & Wiring)
+
+1\. ต่อโพเทนชิโอมิเตอร์: ปลายทั้งสองเข้า 3V3 และ GND ขากลางเข้า GPIO34
+
+2\. ต่อปุ่มชิ้นงานเข้าสถานีระหว่าง GPIO4 กับ GND และปุ่มหยุดฉุกเฉินระหว่าง GPIO5 กับ GND
+
+3\. ต่อเซอร์โว: สัญญาณ → GPIO13 สายแดง → 5 V สายน้ำตาล → GND (GND ร่วมกับ ESP32)
+
+4\. ต่อ LED เขียว → GPIO25, LED แดง → GPIO27 (ผ่าน 330 Ω) และบัซเซอร์ → GPIO26 แล้วให้ผู้สอนตรวจก่อนจ่ายไฟ
+
+![ภาพที่ 9.L2 แผนผังการต่อวงจรสถานีตรวจสอบคุณภาพ: อินพุตน้ำหนักจำลอง ปุ่มชิ้นงานและหยุดฉุกเฉิน เซอร์โวคัดออก และไฟ PASS/FAIL](/images/book/b04_lab9_2_wiring.png)
+
+(ที่มา: ผู้จัดทำ)
+
+### 4. โค้ดภาษา Python (MicroPython) สำหรับ ESP32
+
+คัดลอกโค้ดต่อไปนี้ลงในไฟล์ main.py แล้วอัปโหลดไปยังบอร์ด ESP32 ด้วย VS Code (MicroPico/Pymakr Extension)
+
+```python
+# main.py - ESP32 MicroPython: สถานีตรวจสอบคุณภาพและคัดแยกชิ้นงาน (โครงงานบูรณาการ)
+from machine import Pin, ADC, PWM
+import time
+
+part = Pin(4, Pin.IN, Pin.PULL_UP)                   # เซนเซอร์/ปุ่มชิ้นงานเข้าสถานี: 0 = มีชิ้นงาน
+estop = Pin(5, Pin.IN, Pin.PULL_UP)                  # หยุดฉุกเฉิน: 0 = กด
+wsens = ADC(Pin(34)); wsens.atten(ADC.ATTN_11DB)     # จำลองโหลดเซลล์ด้วยโพเทนชิโอมิเตอร์
+servo = PWM(Pin(13), freq=50)                        # เซอร์โวคัดออก
+g_led, r_led, buz = Pin(25, Pin.OUT), Pin(27, Pin.OUT), Pin(26, Pin.OUT)
+NOMINAL, TOL, FULL_G = 200.0, 20.0, 500.0            # น้ำหนักมาตรฐาน ค่าเผื่อ และช่วงเต็มสเกล (g)
+STATES = ("WAIT", "MEASURE", "SORT", "CLEAR", "ESTOP")
+
+def servo_deg(a):
+    servo.duty_u16(int((0.5 + a / 90) / 20 * 65535))
+
+def weight_g(n=10):
+    """เฉลี่ย 10 ตัวอย่าง (ประมาณ 200 ms) แล้วแปลงเป็นกรัม"""
+    s = 0
+    for _ in range(n):
+        s += wsens.read(); time.sleep_ms(20)
+    return s / n * FULL_G / 4095
+
+def log_csv(t_ms, w, ok):
+    try:
+        with open("qc_log.csv", "a") as f:
+            f.write("{},{:.1f},{}\n".format(t_ms, w, "PASS" if ok else "FAIL"))
+    except OSError:
+        print("LOG ERROR")
+
+state, total, passed = "WAIT", 0, 0
+t0 = t_sort = t_pr = time.ticks_ms()
+servo_deg(0)
+while True:
+    now = time.ticks_ms()
+    if estop.value() == 0:                           # ฉุกเฉิน: หยุดทุกอย่างในสถานะปลอดภัย
+        state = "ESTOP"; servo_deg(0); buz.value(1)
+    elif state == "ESTOP":                           # ปลดปุ่มแล้วกลับไปรอชิ้นงานใหม่
+        state = "WAIT"; buz.value(0)
+    elif state == "WAIT" and part.value() == 0:
+        state = "MEASURE"
+    elif state == "MEASURE":
+        w = weight_g()
+        ok = abs(w - NOMINAL) <= TOL
+        total += 1
+        passed += 1 if ok else 0
+        g_led.value(1 if ok else 0); r_led.value(0 if ok else 1)
+        servo_deg(0 if ok else 90)                   # ชิ้นงานเสียถูกผลักลงรางคัดออก
+        log_csv(time.ticks_diff(now, t0), w, ok)
+        print("PART {} w={:.1f} g {}".format(total, w, "PASS" if ok else "FAIL"))
+        state, t_sort = "SORT", now
+    elif state == "SORT" and time.ticks_diff(now, t_sort) >= 700:
+        servo_deg(0); g_led.value(0); r_led.value(0)
+        state = "CLEAR"
+    elif state == "CLEAR" and part.value() == 1:     # รอให้ชิ้นงานออกจากสถานีก่อนรับชิ้นใหม่
+        state = "WAIT"
+
+    if time.ticks_diff(now, t_pr) >= 1000:
+        mins = time.ticks_diff(now, t0) / 60000
+        print(">TOTAL:{}".format(total)); print(">YIELD_PCT:{:.1f}".format(passed * 100 / total if total else 0))
+        print(">PPM:{:.1f}".format(total / mins if mins > 0 else 0)); print(">STATE:{}".format(STATES.index(state)))
+        t_pr = now
+    time.sleep_ms(10)
+```
+
+### 5. ขั้นตอนการตั้งค่า Dashboard บน VS Code
+
+1\. เปิด Visual Studio Code เชื่อมต่อ ESP32 ด้วยสาย USB แล้วเลือกพอร์ต (COM Port) ที่ถูกต้องในส่วนขยาย MicroPico
+
+2\. สร้างไฟล์ main.py วางโค้ดตามข้อ 4 แล้วกด Upload/Run ไปยังบอร์ด
+
+3\. เปิด Teleplot สังเกตกราฟ TOTAL, YIELD_PCT, PPM และ STATE ระหว่างทดสอบ
+
+4\. ตั้งน้ำหนักจำลองด้วยโพเทนชิโอมิเตอร์ตามตารางที่ 9.4 แล้วกดปุ่มชิ้นงานค้าง 1 วินาทีแล้วปล่อย บันทึกผล PASS/FAIL และตำแหน่งเซอร์โว
+
+5\. กดปุ่มหยุดฉุกเฉินระหว่างสถานะ SORT สังเกตเซอร์โวและบัซเซอร์ แล้วปลดปุ่ม
+
+6\. ดาวน์โหลดไฟล์ qc_log.csv ด้วย mpremote fs cp :qc_log.csv . เปิดใน Excel คำนวณ Yield เทียบกับ Dashboard และบันทึกในตารางที่ 9.5
+
+### 6. ตารางบันทึกผลการทดลอง
+
+### ตารางที่ 9.4 ผลการตรวจสอบคุณภาพตามน้ำหนักจำลอง (ค่ามาตรฐาน 200 ± 20 g)
+
+| **ครั้งที่** | **น้ำหนักที่ตั้ง (g)** | **ผลที่คาดหวัง** | **ผลที่แสดง / น้ำหนักที่วัดได้** | **ตำแหน่งเซอร์โว** |
+|---|---|---|---|---|
+| 1 | 150 | FAIL |  |  |
+| 2 | 185 | PASS |  |  |
+| 3 | 200 | PASS |  |  |
+| 4 | 215 | PASS |  |  |
+| 5 | 230 | FAIL |  |  |
+| 6 | 220 (ขอบเขต) | PASS |  |  |
+
+### ตารางที่ 9.5 สรุปตัวชี้วัดการผลิตจาก Dashboard และไฟล์ CSV
+
+| **ตัวชี้วัด** | **จาก Dashboard** | **คำนวณจาก qc_log.csv** | **ตรงกัน/ไม่ตรง** |
+|---|---|---|---|
+| จำนวนชิ้นทั้งหมด (TOTAL) |  |  |  |
+| จำนวนชิ้นดี (PASS) |  |  |  |
+| Yield (%) |  |  |  |
+| อัตราการผลิต (ชิ้น/นาที) |  |  |  |
+
+### 7. สรุปและวิเคราะห์ผลการทดลอง
+
+ให้สรุปการออกแบบเครื่องสถานะของสถานี การตัดสิน PASS/FAIL จากค่าเผื่อ ความถูกต้องของตัวชี้วัดเมื่อเทียบกับไฟล์ CSV ปัญหาที่พบระหว่างทดสอบ และข้อเสนอแนะการปรับปรุงสำหรับการใช้งานจริงในโรงงานอย่างน้อย 2 ข้อ
+
+> ..................................................................................................
+>
+> ..................................................................................................
+>
+> ..................................................................................................
+>
+> ..................................................................................................
+>
+> ..................................................................................................
+
+### คำถามท้ายการทดลอง/การปฏิบัติ
+
+1\. จงคำนวณ Yield (%) เมื่อตรวจ 40 ชิ้น ผ่าน 34 ชิ้น
+
+..................................................................................................
+
+2\. เหตุใดจึงต้องมีสถานะ CLEAR ก่อนกลับไปสถานะ WAIT ถ้าตัดออกจะเกิดอะไรขึ้นเมื่อผู้ปฏิบัติงานกดปุ่มค้าง
+
+..................................................................................................
+
+3\. ถ้าเปลี่ยนจากโพเทนชิโอมิเตอร์เป็นโหลดเซลล์จริง ต้องทำขั้นตอนใดเพิ่มเติมก่อนใช้งาน
+
+..................................................................................................
+
+4\. เสนอการต่อยอดโครงงานให้ส่งข้อมูลขึ้นระบบติดตามการผลิตของโรงงาน (IIoT) 1 แนวทาง
+
+..................................................................................................
+
+### 8. แบบประเมินทักษะการปฏิบัติงาน (Scoring Rubric - ทักษะพิสัย)
+
+### คะแนนรวม 20 คะแนน (5 หัวข้อ × ระดับ 1–4 หัวข้อละไม่เกิน 4 คะแนน)
+
+| **หัวข้อการประเมิน**                    | **4 (ดีมาก)**                             | **3 (ดี)**              | **2 (พอใช้)**                  | **1 (ปรับปรุง)**      | **คะแนน** |
+|--------------------------------------|------------------------------------------|------------------------|-------------------------------|---------------------|-----------|
+| 1\. การเตรียมเครื่องมือ/อุปกรณ์            | ตรวจครบ ถูกต้อง และเตรียมก่อนเริ่มโดยไม่ต้องเตือน | ครบถ้วนแต่ต้องตรวจซ้ำ 1 จุด | ขาดอุปกรณ์/ต้องเตือนหลายจุด        | ไม่เตรียมหรือใช้อุปกรณ์ผิด |           |
+| 2\. ลำดับขั้นตอนการเขียน/ทดสอบโปรแกรม    | ทำตามลำดับถูกต้องครบทุกขั้น                    | ผิดลำดับเล็กน้อย แก้ได้เอง   | ต้องได้รับคำแนะนำจึงทำต่อได้        | ทำไม่ครบขั้นตอน        |           |
+| 3\. ความถูกต้องของผลการทดสอบ/การบันทึกผล | ผลตรงทุกชุดและบันทึกครบ                      | ผลตรงเกือบทั้งหมด บันทึกครบ | ผลคลาดเคลื่อนหลายจุดหรือบันทึกไม่ครบ | ผลไม่ตรงและไม่บันทึก    |           |
+| 4\. การวิเคราะห์และสรุปผล               | วิเคราะห์เชื่อมโยงทฤษฎีและตอบคำถามถูกต้องครบ    | วิเคราะห์ถูกต้องบางส่วน     | สรุปได้เพียงผลที่เห็น               | ไม่สรุป/สรุปไม่ถูกต้อง    |           |
+| 5\. ความสะอาดและความปลอดภัย           | ปฏิบัติตามกฎความปลอดภัยครบและเก็บของเรียบร้อย   | บกพร่องเล็กน้อย 1 จุด      | บกพร่องหลายจุด ต้องตักเตือน        | ละเลยความปลอดภัย     |           |
+
+ผู้ประเมิน .......................................................... ตำแหน่ง ...................... วันที่ ....................
+
+เฉลยแนวคิด: (1) 34 / 40 × 100 = 85 % ; (2) ป้องกันการวัดซ้ำชิ้นเดิม ถ้าตัดออกระบบจะวน MEASURE ซ้ำทุกครั้งที่ปุ่มยังถูกกดและนับเกินจริง ; (3) ต่อผ่านวงจรขยายสัญญาณ เช่น HX711 ทำ Tare และสอบเทียบ (Calibrate) ด้วยตุ้มน้ำหนักมาตรฐาน ; (4) เชื่อมต่อ Wi-Fi ส่งข้อมูลผ่าน MQTT/HTTP ไปยัง Dashboard ของโรงงาน พร้อมบันทึกเวลาจริงจาก NTP
 
 ### ใบมอบงานหน่วยเรียนที่ 9
 
@@ -301,7 +492,8 @@ main.py
 |-------------------------------------|--------------|--------------|
 | แบบทดสอบก่อนเรียน                     | 10           |              |
 | แบบฝึกหัดท้ายหน่วย (10 ข้อ × 10 คะแนนดิบ) | 100          |              |
-| ใบงานภาคปฏิบัติ (ทักษะพิสัย)              | 20           |              |
+| ใบงานภาคปฏิบัติที่ 9.1 (ทักษะพิสัย)              | 20           |              |
+| ใบงานภาคปฏิบัติที่ 9.2 (ทักษะพิสัย)              | 20           |              |
 | ใบมอบงาน/รายงาน (พุทธิพิสัย)            | 16           |              |
 | จิตพิสัย                               | 20           |              |
 | แบบทดสอบหลังเรียน                     | 10           |              |
@@ -314,7 +506,7 @@ Given/Determine = 1, การกำหนด Assumption/เขียน system 
 
 ### ส่วนที่ 3 เกณฑ์ประเมินทักษะพิสัย (Psychomotor Domain)
 
-ใช้แบบประเมินทักษะการปฏิบัติงานของใบงานที่ 9 (5 หัวข้อ × 4 ระดับ รวม 20 คะแนน: 4 =
+ใช้แบบประเมินทักษะการปฏิบัติงานของใบงานที่ 9.1 และ 9.2 (ใบงานละ 5 หัวข้อ × 4 ระดับ รวม 20 คะแนน: 4 =
 ดีมาก, 3 = ดี, 2 = พอใช้, 1 = ปรับปรุง)
 
 ### ส่วนที่ 4 เกณฑ์ประเมินจิตพิสัย (Affective Domain) คะแนนเต็ม 20 คะแนน

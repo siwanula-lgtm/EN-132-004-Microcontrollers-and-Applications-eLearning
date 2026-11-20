@@ -62,63 +62,55 @@ GPIO17, GPIO18 และ GPIO19 ตามลำดับ (b0–b3) และต�
 คัดลอกโค้ดต่อไปนี้ลงในไฟล์ main.py แล้วอัปโหลดไปยังบอร์ด ESP32 ด้วย VS Code
 (MicroPico/Pymakr Extension)
 
-<table>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p># main.py — ESP32 MicroPython: ตัวนับ 4 บิต (LED + ปุ่มกด) และอ่าน ADC
-12 บิตจาก LDR</p>
-<p># แสดงผลบน VS Code Dashboard (Teleplot / Serial Monitor)</p>
-<p>from machine import Pin, ADC</p>
-<p>import time</p>
-<p># 1) กำหนดขา GPIO
----------------------------------------------------------</p>
-<p>LED_PINS = (16, 17, 18, 19) # b0 b1 b2 b3 (b0 = LSB)</p>
-<p>leds = [Pin(n, Pin.OUT) for n in LED_PINS] # ขาเอาต์พุตขับ LED</p>
-<p>btn = Pin(4, Pin.IN, Pin.PULL_UP) # ปุ่มกด: ปกติ=1, กด=0 (ต่อลง GND)</p>
-<p>ldr = ADC(Pin(34)) # GPIO34 เป็นขาอินพุตอย่างเดียว (ADC1)</p>
-<p>ldr.atten(ADC.ATTN_11DB) # ช่วงวัดประมาณ 0 - 3.3 V</p>
-<p>ldr.width(ADC.WIDTH_12BIT) # ความละเอียด 12 บิต (0-4095)</p>
-<p>VREF = 3.3</p>
-<p>def show(n):</p>
-<p>"""ส่งค่า n (0-15) ออกไปยัง LED 4 ดวง ตามบิต"""</p>
-<p>for i, led in enumerate(leds):</p>
-<p>led.value((n &gt;&gt; i) &amp; 1) # เลื่อนบิตแล้วมาสก์ด้วย 1</p>
-<p>count = 0</p>
-<p>last_btn = 1</p>
-<p>last_press = time.ticks_ms</p>
-<p>last_print = time.ticks_ms</p>
-<p>show(count)</p>
-<p>while True:</p>
-<p>now = btn.value</p>
-<p># ตรวจขอบขาลง (กดปุ่ม) และกันการเด้งของหน้าสัมผัส 200 ms</p>
-<p>if last_btn == 1 and now == 0 and time.ticks_diff(time.ticks_ms,
-last_press) &gt; 200:</p>
-<p>count = (count + 1) &amp; 0x0F # นับ 0-15 แล้ววนกลับเป็น 0</p>
-<p>show(count)</p>
-<p>last_press = time.ticks_ms</p>
-<p>last_btn = now</p>
-<p># แสดงผลทุก 500 ms</p>
-<p>if time.ticks_diff(time.ticks_ms, last_print) &gt;= 500:</p>
-<p>raw = ldr.read # ค่าดิบ 0-4095</p>
-<p>volt = raw * VREF / 4095 # แปลงเป็นแรงดัน (ค่าประมาณ)</p>
-<p># รูปแบบ Teleplot: &gt;ชื่อ:ค่า</p>
-<p>print("&gt;COUNT_DEC:{}".format(count))</p>
-<p>print("&gt;LDR_RAW:{}".format(raw))</p>
-<p>print("&gt;LDR_VOLT:{:.3f}".format(volt))</p>
-<p># บรรทัดข้อความสำหรับ Serial Monitor (ทศนิยม / ฐานสอง / ฐานสิบหก)</p>
-<p>print("COUNT dec={} bin={:04b} hex=0x{:X} | LDR raw={} bin={:012b}
-hex=0x{:03X} V={:.2f}".format(</p>
-<p>count, count, count, raw, raw, raw, volt))</p>
-<p>last_print = time.ticks_ms</p>
-<p>time.sleep_ms(10)</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+```python
+# main.py — ESP32 MicroPython: ตัวนับ 4 บิต (LED + ปุ่มกด) และอ่าน ADC 12 บิตจาก LDR
+# แสดงผลบน VS Code Dashboard (Teleplot / Serial Monitor)
+from machine import Pin, ADC
+import time
+
+# 1) กำหนดขา GPIO ---------------------------------------------------------
+LED_PINS = (16, 17, 18, 19)                      # b0 b1 b2 b3 (b0 = LSB)
+leds = [Pin(n, Pin.OUT) for n in LED_PINS]       # ขาเอาต์พุตขับ LED
+btn = Pin(4, Pin.IN, Pin.PULL_UP)                # ปุ่มกด: ปกติ=1, กด=0 (ต่อลง GND)
+ldr = ADC(Pin(34))                               # GPIO34 เป็นขาอินพุตอย่างเดียว (ADC1)
+ldr.atten(ADC.ATTN_11DB)                         # ช่วงวัดประมาณ 0 - 3.3 V
+ldr.width(ADC.WIDTH_12BIT)                       # ความละเอียด 12 บิต (0-4095)
+VREF = 3.3
+
+def show(n):
+    """ส่งค่า n (0-15) ออกไปยัง LED 4 ดวง ตามบิต"""
+    for i, led in enumerate(leds):
+        led.value((n >> i) & 1)                  # เลื่อนบิตแล้วมาสก์ด้วย 1
+
+count = 0
+last_btn = 1
+last_press = time.ticks_ms()
+last_print = time.ticks_ms()
+show(count)
+
+while True:
+    now = btn.value()
+    # ตรวจขอบขาลง (กดปุ่ม) และกันการเด้งของหน้าสัมผัส 200 ms
+    if last_btn == 1 and now == 0 and time.ticks_diff(time.ticks_ms(), last_press) > 200:
+        count = (count + 1) & 0x0F               # นับ 0-15 แล้ววนกลับเป็น 0
+        show(count)
+        last_press = time.ticks_ms()
+    last_btn = now
+
+    # แสดงผลทุก 500 ms
+    if time.ticks_diff(time.ticks_ms(), last_print) >= 500:
+        raw = ldr.read()                       # ค่าดิบ 0-4095
+        volt = raw * VREF / 4095                 # แปลงเป็นแรงดัน (ค่าประมาณ)
+        # รูปแบบ Teleplot: >ชื่อ:ค่า
+        print(">COUNT_DEC:{}".format(count))
+        print(">LDR_RAW:{}".format(raw))
+        print(">LDR_VOLT:{:.3f}".format(volt))
+        # บรรทัดข้อความสำหรับ Serial Monitor (ทศนิยม / ฐานสอง / ฐานสิบหก)
+        print("COUNT dec={} bin={:04b} hex=0x{:X} | LDR raw={} bin={:012b} hex=0x{:03X} V={:.2f}".format(
+            count, count, count, raw, raw, raw, volt))
+        last_print = time.ticks_ms()
+    time.sleep_ms(10)
+```
 
 ### 5. ขั้นตอนการตั้งค่า Dashboard บน VS Code
 
